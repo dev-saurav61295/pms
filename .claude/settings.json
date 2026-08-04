@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sed 's/=.*/=<redacted>/' .env && echo \"--- .env.example ---\" && cat .env.example && echo \"--- vscode ---\" && ls -la .vscode/)",
+      "Bash(npm view *)",
+      "Bash(npm pack *)",
+      "Bash(tar -tzf benborla29-mcp-server-mysql-*.tgz)",
+      "Bash(nc -z -G 5 43.204.209.116 3306)",
+      "Bash(node -e ' *)",
+      "Bash(python3 -c ' *)",
+      "Bash(tar -xzf benborla29-mcp-server-mysql-2.0.9.tgz)",
+      "Bash(grep -oE \"\\(ALLOW_INTROSPECTION|ALLOW_SELECT_STAR|ALLOW_REFERENCES|MYSQL_DISABLE_READ_ONLY_TRANSACTIONS\\)[^,;]{0,90}\" package/dist/src/config/index.js)",
+      "Bash(claude mcp *)",
+      "Bash(/Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/npx -y @benborla29/mcp-server-mysql@2.0.9 --help)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(mkdir -p .mcp-servers)",
+      "Bash(npm install *)",
+      "Bash(sed -i '' \"s|exec \\\\${NPX} -y @benborla29/mcp-server-mysql@2.0.9|exec /Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/node /Users/sauravkaushik/Developer/AI/PMS/.mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/index.js|\" probe.js)",
+      "Bash(node probe.js)",
+      "Bash(python3 -)"
+    ],
+    "additionalDirectories": [
+      "/Users/sauravkaushik/Developer/AI/PMS"
+    ]
+  }
+}
