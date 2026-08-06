@@ -47,9 +47,23 @@ To run a single query instead of all of them, edit `TEST_PARAMS` / slice `QUERIE
 
 ## Database access
 
+### Running SQL the user provides — always via MCP
+
+**When the user supplies a SQL query, run it through the `mysql` MCP server (`mcp__mysql__mysql_query`).** Do not paste it into a Python script, do not hand it back for the user to run manually, and do not answer it from `engagedb.sql` instead. They want results from the live database.
+
+**If the MCP server is disconnected or erroring, say so and stop — ask before falling back to anything else.** Don't silently substitute the offline dump, don't spin up a one-off pymysql script, and don't quietly skip a query. A disconnected server is a thing to report, not to work around.
+
+Run the queries the user actually gave, in the order given. If a query errors (wrong column, wrong table), report the error and the corrected version — running extra exploratory or label-resolution queries on top is a separate step to offer, not to assume. Queries against the big tables can take **30–60s**, so batching in speculative extras is expensive.
+
 Read-only by construction and it must stay that way — the DB user is `engagedb_ro_usr`, and the MySQL MCP server in `.mcp.json` sets `ALLOW_INSERT/UPDATE/DELETE/DDL_OPERATION=false`. Never write to the live database; use `engagedb.sql` if you need to experiment against a schema.
 
-`.mcp.json` launches the server via absolute paths under `/Users/sauravkaushik/Developer/AI/PMS/` — a **different directory than this one**. It sources `.env` from there and runs the node binary from there. If MCP calls fail, that path drift is the first thing to check; `.claude/settings.json` also lists that directory under `additionalDirectories`.
+### If the MCP server won't start
+
+`.mcp.json` launches the server via **absolute paths**, and it sources `.env` and the node binary from those paths. They currently point at this directory (`/Users/sauravkaushik/Developer/pms/`), but they previously pointed at a since-deleted `/Users/sauravkaushik/Developer/AI/PMS/` — so **path drift is the first thing to check** if the server fails.
+
+The failure mode is silent and misleading: the launcher is a `sh -c` that starts with `. <path>/.env`, and POSIX `sh` exits immediately when the `.` builtin can't open its file. Node never launches, the stdio pipe closes, and the client reports only `MCP error -32000: Connection closed`. To diagnose, run the `command`/`args` from `.mcp.json` by hand — a working server stays alive and silent; a broken one prints `sh: <path>: No such file or directory` and exits at once.
+
+`.claude/settings.json` still lists the dead `/Users/sauravkaushik/Developer/AI/PMS` under `additionalDirectories`; harmless, but ignore it as a path reference.
 
 ## Schema conventions worth knowing before writing SQL
 

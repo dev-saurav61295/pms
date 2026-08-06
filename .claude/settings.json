@@ -17,7 +17,16 @@
       "Bash(npm install *)",
       "Bash(sed -i '' \"s|exec \\\\${NPX} -y @benborla29/mcp-server-mysql@2.0.9|exec /Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/node /Users/sauravkaushik/Developer/AI/PMS/.mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/index.js|\" probe.js)",
       "Bash(node probe.js)",
-      "Bash(python3 -)"
+      "Bash(python3 -)",
+      "Read(//Users/sauravkaushik/Developer/AI/**)",
+      "Read(//Users/sauravkaushik/Developer/AI/PMS/**)",
+      "Read(//Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/**)",
+      "Read(//Users/sauravkaushik/Developer/AI/PMS/.mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/**)",
+      "Bash(sh -c 'set -a; . /Users/sauravkaushik/Developer/AI/PMS/.env; set +a; export MYSQL_PASS=\"$MYSQL_PASSWORD\" MYSQL_DB=\"$MYSQL_DATABASE\"; exec /Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/node /Users/sauravkaushik/Developer/AI/PMS/.mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/index.js')",
+      "Bash(echo \"=== exit: $? ===\")",
+      "Read(//Users/sauravkaushik/Developer/**)",
+      "Bash(grep -nE \"CREATE TABLE \\\\`\\(tbl_project_risk|tbl_risk|tbl_projects|tbl_project_tasks|tbl_project_issues\\)\\\\`\" engadb.sql engagedb.sql)",
+      "mcp__mysql__mysql_query"
     ],
     "additionalDirectories": [
       "/Users/sauravkaushik/Developer/AI/PMS"
