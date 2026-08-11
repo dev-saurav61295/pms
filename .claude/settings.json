@@ -26,7 +26,17 @@
       "Bash(echo \"=== exit: $? ===\")",
       "Read(//Users/sauravkaushik/Developer/**)",
       "Bash(grep -nE \"CREATE TABLE \\\\`\\(tbl_project_risk|tbl_risk|tbl_projects|tbl_project_tasks|tbl_project_issues\\)\\\\`\" engadb.sql engagedb.sql)",
-      "mcp__mysql__mysql_query"
+      "mcp__mysql__mysql_query",
+      "Bash(grep -nc '^---$' PMS_Inputs_Required_From_User.md)",
+      "Bash(awk 'NR>=20 && NR<=115' PMS_Inputs_Required_From_User.md)",
+      "Bash(grep -n \"CREATE TABLE \\\\`tbl_project_issues\\\\`\" -A 45 engagedb.sql)",
+      "Bash(grep -n \"CREATE TABLE \\\\`tbl_project_users\\\\`\" -A 40 engagedb.sql)",
+      "Bash(grep -n \"CREATE TABLE \\\\`tbl_projects\\\\`\" -A 60 engagedb.sql)",
+      "Bash(grep -n \"CREATE TABLE \\\\`tbl_user_company\\\\`\" -A 15 engagedb.sql)",
+      "Bash(grep -n \"CREATE TABLE \\\\`tbl_company\" engagedb.sql)",
+      "Bash(grep -n \"CREATE TABLE \\\\`tbl_timesheet\" engagedb.sql)",
+      "Bash(grep -n \"CREATE TABLE \\\\`tbl_risk\\\\`\" -A 3 engagedb.sql)",
+      "Bash(grep -n \"CREATE TABLE \\\\`tbl_project_risk\\\\`\" -A 3 engagedb.sql)"
     ],
     "additionalDirectories": [
       "/Users/sauravkaushik/Developer/AI/PMS"

@@ -149,13 +149,13 @@ TEST_PARAMS = {
     "current_user_id":  3066,       # e.g. 42
 
     # Pick any real project title from tbl_projects
-    "project_name":     None,       # e.g. "Project Alpha"
+    "project_name":     "DE_Bandhan AMC_AMC Renewal of Bank's Website for 252 Mandays",
 
     # Pick any real project_unique_id OR project title (Row 4 supports both)
-    "project_identifier": None,     # e.g. "PF-001" or "Project Alpha"
+    "project_identifier": "2512/BFS/6265",     # e.g. "PF-001" or "Project Alpha"
 
     # Pick any real task reference_no from tbl_project_tasks
-    "task_reference":   None,       # e.g. "TASK-001"
+    "task_reference":   "T--143",   # e.g. "TASK-001"
 
     # Pick any real risk reference_no from tbl_risk
     "risk_reference":   None,       # e.g. "RISK-001"
@@ -167,16 +167,16 @@ TEST_PARAMS = {
     "milestone_name":   None,       # e.g. "Phase 1 Complete"
 
     # Pick any real employee full name (first_name + ' ' + last_name) from tbl_users
-    "employee_name":    None,       # e.g. "Rahul Sharma"
+    "employee_name":    "Saurav Kaushik",   # e.g. "Rahul Sharma"
 
     # Pick any real department name from tbl_project_department
-    "department_name":  None,       # e.g. "Engineering"
+    "department_name":  "BFS",      # e.g. "Engineering"
 
     # Pick any real team name from tbl_project_team
     "team_name":        None,       # e.g. "Backend Team"
 
-    # Pick any real project type from tbl_project_types
-    "project_type":     None,       # e.g. "Fixed Price"
+    # Project type is NOT in tbl_project_types — it lives on tbl_projects
+    "project_type":     "Business",  # e.g. "Fixed Price"
 
     # Date range for period-based queries (use recent dates with data)
     "start_date":       None,       # e.g. "2025-01-01"

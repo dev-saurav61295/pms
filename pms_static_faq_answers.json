@@ -1,0 +1,242 @@
+{
+  "generated_at": "2026-08-10",
+  "database": "engagedb",
+  "source": "live read-only query via mysql MCP (engagedb_ro_usr)",
+  "note": "Full master tables, not distinct-over-data. Several of these are LARGER than the values currently in use, so do not derive the static list from observed data.",
+  "entries": [
+    {
+      "id": "project_statuses",
+      "question": "What project statuses exist in PMS?",
+      "aliases": [
+        "list project statuses",
+        "what are the possible project statuses",
+        "project status options"
+      ],
+      "answer_text": "PMS uses 6 project statuses: PendingApproval, Approved, Active, Closed, Halted, Abandonned (in workflow order).",
+      "source_table": "tbl_project_status",
+      "join_key": "tbl_projects.project_status_id = tbl_project_status.status_id",
+      "refresh_sql": "SELECT status_id, status_name, color_code, status_order FROM tbl_project_status WHERE status = 1 ORDER BY status_order",
+      "values": [
+        { "id": 1, "name": "PendingApproval", "order": 1, "color": "#FCBABA" },
+        { "id": 5, "name": "Approved", "order": 2, "color": "#ea9700" },
+        { "id": 2, "name": "Active", "order": 3, "color": "#008000" },
+        { "id": 3, "name": "Closed", "order": 4, "color": "#008000" },
+        { "id": 4, "name": "Halted", "order": 5, "color": "#ea9700" },
+        { "id": 6, "name": "Abandonned", "order": 6, "color": "#008000" }
+      ],
+      "caveats": [
+        "'Abandonned' is misspelled in the database. Store it as-is for joins; display 'Abandoned' if you want clean copy.",
+        "Only 3 of the 6 (PendingApproval, Active, Approved) are actually in use across the ~5,822 projects. The static answer should still list all 6.",
+        "The primary key is status_id, NOT project_status_id. Any SQL selecting tbl_project_status.project_status_id will error."
+      ]
+    },
+    {
+      "id": "project_stages",
+      "question": "What are the project stages?",
+      "aliases": ["list project stages", "project lifecycle stages"],
+      "answer_text": "PMS has 3 project stages: Initiation, Implementation, Closure.",
+      "source_table": "tbl_project_stages",
+      "join_key": "tbl_projects.project_stage_id = tbl_project_stages.stage_id",
+      "refresh_sql": "SELECT DISTINCT stage_name FROM tbl_project_stages WHERE status = 1 ORDER BY FIELD(stage_name,'Initiation','Implementation','Closure')",
+      "values": [
+        { "name": "Initiation", "color": "#ff0000" },
+        { "name": "Implementation", "color": "#ea9700" },
+        { "name": "Closure", "color": "#008000" }
+      ],
+      "caveats": [
+        "The table holds 39 rows, not 3: the same 3 stage names are duplicated once per group_id (0 through 12). Use DISTINCT stage_name for the static answer.",
+        "Because stage_id differs per group, never hardcode a stage_id. Live projects reference the group_id = 0 set (stage_id 239/240/241)."
+      ]
+    },
+    {
+      "id": "rag_values",
+      "question": "What RAG values does PMS use?",
+      "aliases": ["what are the RAG statuses", "RAG colour meanings", "list RAG values"],
+      "answer_text": "PMS RAG is Red, Amber, Green. Tasks additionally use Blue and Gray. RAG is stored as free text, and a blank value means RAG was never set.",
+      "source_table": "free-text column: tbl_projects.rag and tbl_project_tasks.rag (there is NO RAG master table)",
+      "refresh_sql": "SELECT rag, COUNT(*) FROM tbl_project_tasks GROUP BY rag ORDER BY rag",
+      "values": {
+        "project_rag": [
+          { "value": "Green", "count": 3 },
+          { "value": "Amber", "count": 2 },
+          { "value": "", "count": 5817, "meaning": "not set" }
+        ],
+        "task_rag": [
+          { "value": "Green", "count": 171456 },
+          { "value": "Amber", "count": 39688 },
+          { "value": "Red", "count": 3778 },
+          { "value": "Gray", "count": 4127 },
+          { "value": "Blue", "count": 423 },
+          { "value": "", "count": 11472, "meaning": "not set" }
+        ]
+      },
+      "caveats": [
+        "There is no lookup table, so this list is observed data, not an enumeration. A new value could appear at any time.",
+        "'Red' does not currently appear on any project, only on tasks. Do not say projects cannot be Red — say none are Red today.",
+        "Project RAG is effectively unused: 5,817 of 5,822 projects are blank. Any project-level RAG KPI will be near-empty.",
+        "Values are case-sensitive strings ('Amber', not 'amber'), and it is 'Gray' not 'Grey'.",
+        "Blue and Gray are task-only and have no documented meaning in the schema — get the business definition before exposing them."
+      ]
+    },
+    {
+      "id": "risk_priorities",
+      "question": "What risk priorities are available?",
+      "aliases": ["list risk priorities", "risk priority levels"],
+      "answer_text": "Risk priority has 3 levels: Low (1), Meduim (2), High (3).",
+      "source_table": "tbl_risk_priority",
+      "join_key": "tbl_risk.risk_priority_id = tbl_risk_priority.risk_priority_id",
+      "refresh_sql": "SELECT risk_priority_id, priority_name, priority_value FROM tbl_risk_priority WHERE status = 1 ORDER BY priority_value",
+      "values": [
+        { "id": 1, "name": "Low", "value": 1 },
+        { "id": 2, "name": "Meduim", "value": 2 },
+        { "id": 3, "name": "High", "value": 3 }
+      ],
+      "caveats": [
+        "'Meduim' is misspelled in the database. Match on the stored spelling; display 'Medium'.",
+        "Also accept the user typing 'Medium' — an exact-match filter on 'Medium' returns zero rows."
+      ]
+    },
+    {
+      "id": "risk_probability_scale",
+      "question": "What is the risk probability scale?",
+      "aliases": ["risk probability values", "how is risk probability rated"],
+      "answer_text": "Risk probability is a 5-point scale: Very High (5), High (4), Meduim (3), Low (2), Very Low (1).",
+      "source_table": "tbl_risk_probability",
+      "join_key": "tbl_risk.probability_id = tbl_risk_probability.probability_id",
+      "refresh_sql": "SELECT probability_id, probability_name, probability_value FROM tbl_risk_probability WHERE status = 1 ORDER BY probability_value DESC",
+      "values": [
+        { "id": 1, "name": "Very High", "value": 5 },
+        { "id": 2, "name": "High", "value": 4 },
+        { "id": 3, "name": "Meduim", "value": 3 },
+        { "id": 4, "name": "Low", "value": 2 },
+        { "id": 5, "name": "Very Low", "value": 1 }
+      ],
+      "caveats": [
+        "'Meduim' is misspelled here too.",
+        "probability_id runs 1..5 DESCENDING by severity (id 1 = Very High). Ordering by probability_id gives the reverse of ordering by probability_value. Always order by probability_value.",
+        "Only 4 of the 5 levels appear in current risk data (Very Low unused)."
+      ]
+    },
+    {
+      "id": "risk_impact_scale",
+      "question": "What is the risk impact scale?",
+      "aliases": ["risk impact values", "how is risk impact rated"],
+      "answer_text": "Risk impact is a 5-point scale: Very High (5), High (4), Medium (3), Low (2), Very Low (1).",
+      "source_table": "tbl_risk_impact",
+      "join_key": "tbl_risk.impact_id = tbl_risk_impact.impact_id",
+      "refresh_sql": "SELECT impact_id, impact_name, impact_value FROM tbl_risk_impact WHERE status = 1 ORDER BY impact_value DESC",
+      "values": [
+        { "id": 1, "name": "Very High", "value": 5 },
+        { "id": 2, "name": "High", "value": 4 },
+        { "id": 3, "name": "Medium", "value": 3 },
+        { "id": 4, "name": "Low", "value": 2 },
+        { "id": 5, "name": "Very Low", "value": 1 }
+      ],
+      "caveats": [
+        "Impact spells 'Medium' correctly while probability and priority spell it 'Meduim'. Do not reuse one label list across the three scales.",
+        "Same descending id order as probability. Order by impact_value.",
+        "Risk exposure = probability_value x impact_value gives a 1-25 range, but that formula is NOT stored in the DB and is not business-approved yet."
+      ]
+    },
+    {
+      "id": "task_statuses",
+      "question": "What task statuses exist?",
+      "aliases": ["list task statuses", "possible task statuses", "task status options"],
+      "answer_text": "PMS uses 13 task statuses, in workflow order: New, ReqComplete, InProgress, Complete, Completed in Dev, ReOpen, ReTest, QAPass, UAT, Approve, Live, OnHold, Abandon.",
+      "source_table": "tbl_project_task_status",
+      "join_key": "tbl_project_tasks.task_status_id = tbl_project_task_status.task_status_id",
+      "refresh_sql": "SELECT task_status_id, status_name, status_type, status_order FROM tbl_project_task_status WHERE status = 1 ORDER BY status_order",
+      "values": [
+        { "id": 1, "name": "New", "order": 1, "status_type": 1 },
+        { "id": 12, "name": "ReqComplete", "order": 2, "status_type": 0 },
+        { "id": 2, "name": "InProgress", "order": 3, "status_type": 2 },
+        { "id": 3, "name": "Complete", "order": 4, "status_type": 0 },
+        { "id": 13, "name": "Completed in Dev", "order": 4, "status_type": 7 },
+        { "id": 4, "name": "ReOpen", "order": 5, "status_type": 6 },
+        { "id": 6, "name": "ReTest", "order": 6, "status_type": 0 },
+        { "id": 11, "name": "QAPass", "order": 7, "status_type": 0 },
+        { "id": 7, "name": "UAT", "order": 8, "status_type": 4 },
+        { "id": 9, "name": "Approve", "order": 9, "status_type": 0 },
+        { "id": 8, "name": "Live", "order": 10, "status_type": 3 },
+        { "id": 5, "name": "OnHold", "order": 11, "status_type": 0 },
+        { "id": 10, "name": "Abandon", "order": 12, "status_type": 12 }
+      ],
+      "caveats": [
+        "status_order 4 is shared by 'Complete' (id 3) and 'Completed in Dev' (id 13), so ORDER BY status_order alone is non-deterministic. Add a tiebreak on task_status_id.",
+        "status_type is NOT a severity or grouping flag you can trust: 7 of 13 statuses have status_type = 0. Do not use it to infer open vs closed.",
+        "Which statuses count as 'open' / 'completed' is NOT defined in the database. 'Complete', 'Completed in Dev', 'Live', 'Approve', and 'QAPass' are all plausibly done. This is the single biggest open business rule for any overdue / open-task / completion-percentage KPI."
+      ]
+    },
+    {
+      "id": "issue_statuses",
+      "question": "What issue statuses exist?",
+      "aliases": ["list issue statuses", "issue status options"],
+      "answer_text": "PMS uses 10 issue statuses, in workflow order: Raised, Acknowledged, InProgress, Complete, Abandonned, Critical, Reopen, Dev Complete, QA Complete, Closed.",
+      "source_table": "tbl_project_issue_status",
+      "join_key": "tbl_project_issues.issue_status_id = tbl_project_issue_status.issue_status_id",
+      "refresh_sql": "SELECT issue_status_id, status_name, status_type, status_order FROM tbl_project_issue_status WHERE status = 1 ORDER BY status_order, issue_status_id",
+      "values": [
+        { "id": 1, "name": "Raised", "order": 1, "status_type": 1 },
+        { "id": 4, "name": "Acknowledged", "order": 2, "status_type": 0 },
+        { "id": 2, "name": "InProgress", "order": 3, "status_type": 2 },
+        { "id": 3, "name": "Complete", "order": 4, "status_type": 3 },
+        { "id": 5, "name": "Abandonned", "order": 5, "status_type": 0 },
+        { "id": 6, "name": "Critical", "order": 5, "status_type": 0 },
+        { "id": 7, "name": "Reopen", "order": 6, "status_type": 0 },
+        { "id": 8, "name": "Dev Complete", "order": 7, "status_type": 0 },
+        { "id": 9, "name": "QA Complete", "order": 8, "status_type": 0 },
+        { "id": 10, "name": "Closed", "order": 9, "status_type": 0 }
+      ],
+      "caveats": [
+        "'Critical' is a SEVERITY word sitting in the status list. It shares status_order 5 with 'Abandonned'. Expect users asking for 'critical issues' to mean severity, not this status — clarify before binding.",
+        "'Abandonned' is misspelled in the database.",
+        "As with tasks, open vs closed is not defined in the DB: Complete, Dev Complete, QA Complete, and Closed are all candidates."
+      ]
+    },
+    {
+      "id": "issue_impact_scale",
+      "question": "What issue impact levels exist?",
+      "aliases": ["issue impact values"],
+      "answer_text": "Issue impact has 3 levels: High, Medium, Low.",
+      "source_table": "tbl_project_impact",
+      "join_key": "tbl_project_issues.impact_id = tbl_project_impact.impact_id",
+      "refresh_sql": "SELECT impact_id, impact_name FROM tbl_project_impact WHERE status = 1 ORDER BY impact_id",
+      "values": [
+        { "id": 1, "name": "High", "issue_count": 8238 },
+        { "id": 2, "name": "Low", "issue_count": 2932 },
+        { "id": 3, "name": "Medium", "issue_count": 3564 }
+      ],
+      "caveats": [
+        "id order is High, Low, Medium — NOT descending severity. Never ORDER BY impact_id for a severity ranking.",
+        "This is a different table and a different scale from tbl_risk_impact (3 levels vs 5). Do not share one impact list between risks and issues.",
+        "impact_id = 0 on 11 issues, which has no matching row. Use LEFT JOIN or those issues vanish."
+      ]
+    }
+  ],
+  "unresolved": [
+    {
+      "field": "tbl_project_issues.severity",
+      "observed_values": [0, 1, 2, 3],
+      "problem": "No master table exists anywhere in engagedb for issue severity, so the integer labels cannot be sourced from the database. 14,732 of 14,745 issues have severity = 0, i.e. unset.",
+      "action": "Get the label mapping from the PHP application code or the business, then add it as a hardcoded static entry. Do not guess 1=Low/2=Medium/3=High."
+    },
+    {
+      "field": "tbl_project_issues.priority",
+      "observed_values": [0, 1, 2, 3],
+      "problem": "tbl_project_priority exists but is EMPTY (0 rows), so there is nothing to join to. 14,732 of 14,745 issues have priority = 0.",
+      "action": "Same as severity — source the mapping from application code, not the DB."
+    },
+    {
+      "field": "tbl_projects.priority",
+      "observed_values": [0, 2, 3],
+      "problem": "Same empty tbl_project_priority. 5,804 of 5,822 projects have priority = 0.",
+      "action": "Same as above. Workbook row 9 ('What priority code is stored for <project>?') is worded to return the raw code precisely because the label is unknown — keep it that way until the mapping is confirmed."
+    },
+    {
+      "field": "task priority",
+      "observed_values": ["High", "Medium", "Low", "", null],
+      "problem": "Task priority is a free-text string on tbl_project_tasks, not an id, and has no master table. Both '' (653 tasks) and NULL (10,702 tasks) occur, so IS NULL alone does not catch unset.",
+      "action": "Answerable as observed data: High, Medium, Low. Note it is a separate mechanism from risk/issue priority ids."
+    }
+  ]
+}
