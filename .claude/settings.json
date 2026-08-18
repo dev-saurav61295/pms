@@ -36,7 +36,11 @@
       "Bash(grep -n \"CREATE TABLE \\\\`tbl_company\" engagedb.sql)",
       "Bash(grep -n \"CREATE TABLE \\\\`tbl_timesheet\" engagedb.sql)",
       "Bash(grep -n \"CREATE TABLE \\\\`tbl_risk\\\\`\" -A 3 engagedb.sql)",
-      "Bash(grep -n \"CREATE TABLE \\\\`tbl_project_risk\\\\`\" -A 3 engagedb.sql)"
+      "Bash(grep -n \"CREATE TABLE \\\\`tbl_project_risk\\\\`\" -A 3 engagedb.sql)",
+      "Bash(grep -n \"CREATE TABLE \\\\`tbl_users\\\\`\" -A 40 \"/Users/sauravkaushik/Developer/pms/engagedb.sql\")",
+      "Bash(grep -n \"CREATE TABLE \\\\`tbl_groups\\\\`\" -A 20 \"/Users/sauravkaushik/Developer/pms/engagedb.sql\")",
+      "Bash(grep -n \"CREATE TABLE \\\\`tbl_project_department\\\\`\" -A 15 \"/Users/sauravkaushik/Developer/pms/engagedb.sql\")",
+      "Bash(grep -iE \"depart|team|project_types|project_status\\\\`|projects\\\\`|users\\\\`|task\\\\`\")"
     ],
     "additionalDirectories": [
       "/Users/sauravkaushik/Developer/AI/PMS"

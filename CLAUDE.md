@@ -71,3 +71,6 @@ The failure mode is silent and misleading: the launcher is a `sh -c` that starts
 - Projects join to people via `tbl_projects.pm_user_id` / `project_owner_id` and `tbl_project_users`. Column J of the workbook flags several rows as "Not Mapped – Business Rule Required" precisely because "my projects" is ambiguous across those three — don't invent a definition, surface the ambiguity.
 - Tasks/risks/issues are identified in questions by `reference_no`, projects by `title` or `project_unique_id`.
 - Status/priority lookups live in separate tables (`tbl_project_status`, `tbl_project_task_status`, `tbl_risk_status`, `tbl_project_issue_status`, …) ordered by `status_order`.
+- `tbl_users.email` is the login identity; `user_id` is only known internally. To parameterize a "my X" query by a person instead of a hardcoded `user_id`, resolve via `JOIN tbl_users u ON u.user_id = <fk>` and filter `WHERE u.email = :user_email` rather than requiring the caller to know the numeric ID.
+- `tbl_users` also holds `password`, `salt`, and `session_id` — never `SELECT *` from it in a query whose results get echoed back; select named non-credential columns instead (`user_id, email, username, first_name, last_name, enabled`).
+- Confirmed test identity: `saurav.kaushik@intglobal.com` → `user_id = 3066` (username `Saurav2527`, enabled=1).
