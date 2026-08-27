@@ -1,0 +1,48 @@
+1,Correctness fixes,,
+,ID,,
+,C-01,"1=Low, 2=Medium, 3=High",Not used in the form so insufficient data
+,C-02,TRUE,
+,C-03,TRUE,Open issues are status_type != 3 ;  In-progress is definitively not closed.
+,C-04,correction confirmed,tbl_risk is the actual table
+,C-05,Confirmed - tbl_groups is the real table. tbl_groups.group_id is FK,"SELECT p.project_id,
+       p.title,
+       g.group_id   AS department_id,
+       g.name       AS department_name
+FROM tbl_projects p
+LEFT JOIN tbl_groups g
+       ON g.group_id = p.department_id
+      AND g.status   = 1
+WHERE p.status = 1;"
+,C-06,"""My Projects"": accepted membership",tbl_project_users (status)
+,C-07,"archive = 0, on shows archive = 1 only, never both",
+,C-08,Not Required,
+,C-09,,
+,C-10,Drop it,
+,C-11,Depends on C-01,
+,C-12,,"tbl_risk (rating, rating_color_code);"
+,O-01,TRUE,
+,O-04,TRUE,
+,O-02,"Expect exactly one row per status_type per scope, incl. a status_type=1 default. Confirms O-01, feeds C-02/C-10","SELECT task_status_id, status_name, status_type, project_id, color_code FROM tbl_project_task_status ORDER BY project_id, status_type;"
+,O-03,"Expect status_type 1/2/3 with 3 = closed. Will confirm C-03, which code already settles.","SELECT issue_status_id, status_name, status_type, project_id FROM tbl_project_issue_status ORDER BY project_id, status_type;"
+,O-05,"Code answers this: for projects 0 = High, not ""unset"" (zero-indexed array('High','Low','Urgent','Strategic'), Project/index.php:132). So 1 exists and means Low. Do not treat 0 as null.","SELECT priority, COUNT(*) FROM tbl_projects GROUP BY priority; SELECT * FROM tbl_project_priority;"
+,O-06,Unblocked by the C-05 fix,
+,O-07,Assume not unique. Titles are free user text ,SHOW INDEX FROM tbl_projects;
+,O-08,"Columns all exist (estimate, estimate_complete, actual_hours, percent_complete). Recommend estimate-weighted completion if coverage ≥80%, else fall back to task-count completion.","SELECT COUNT(*) total, SUM(estimate IS NULL OR estimate=0) no_est, SUM(percent_complete IS NULL) no_pct FROM tbl_project_tasks WHERE status=1;"
+,O-09,None,No person-level capacity data anywhere in the schema. HR-owned.
+,O-10,None,No such constant exists.
+,O-11,None — confirmed absent from the schema,No calendar table exists at all. 
+,O-12,No FTE field exists anywhere,
+,O-13,"Threshold > 100% of derived capacity. But see correction #3: there is no existing cap, so this is not new behavior versus a constraint — the data is simply unconstrained. Expect noisy results: ",
+,O-14,"Decided from code: count leaf tasks only, reusing the existing rollup IF— it already picks the subtask's value when one exists, else the parent's, which is exactly the anti-double-count pattern.",
+,O-15,"Proposal — keep 4 of the 7 indicators, all backed by real columns: overdue tasks (tbl_project_tasks.due_date), open high-severity issues (per C-11), risk rating ≥20 (per C-12), and staleness (tbl_projects.update_date). Drop any indicator relying on tbl_projects.attention_required — that column does not exist",
+,O-16,Proposal — overdue > 0 tasks; ≥1 open severity-3 issue; ≥1 risk rated ≥20; no update in 14 days.,
+,O-17,Proposal — overdue > 0 tasks; ≥1 open severity-3 issue; ≥1 risk rated ≥20; no update in 14 days.,
+,O-18,Show RAG separately; do not feed it into the computed score.,
+,O-19,"Use COALESCE(after_mitigation_risk_score, rating) — i.e. residual where recorded, original otherwise. Both columns exist on tbl_risk, alongside revised_probability/revised_impact.",
+,O-20,"(Risk/Issue) and (Task Delivery) are unblocked as of this analysis, ",
+,O-21,3066,
+,O-22,,
+,O-23,,
+,O-24,,
+,O-25,,
+,O-26,,

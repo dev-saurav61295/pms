@@ -10,7 +10,7 @@
         "MYSQL_HOST": "43.204.209.116",
         "MYSQL_PORT": "3306",
         "MYSQL_USER": "engagedb_ro_usr",
-        "MYSQL_PASSWORD": "REPLACE_WITH_DB_PASSWORD",
+        "MYSQL_PASSWORD": "mOsIEhfnJKuJNf",
         "MYSQL_DATABASE": "engagedb"
       }
     }
