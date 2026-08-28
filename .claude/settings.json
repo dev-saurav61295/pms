@@ -40,10 +40,22 @@
       "Bash(grep -n \"CREATE TABLE \\\\`tbl_users\\\\`\" -A 40 \"/Users/sauravkaushik/Developer/pms/engagedb.sql\")",
       "Bash(grep -n \"CREATE TABLE \\\\`tbl_groups\\\\`\" -A 20 \"/Users/sauravkaushik/Developer/pms/engagedb.sql\")",
       "Bash(grep -n \"CREATE TABLE \\\\`tbl_project_department\\\\`\" -A 15 \"/Users/sauravkaushik/Developer/pms/engagedb.sql\")",
-      "Bash(grep -iE \"depart|team|project_types|project_status\\\\`|projects\\\\`|users\\\\`|task\\\\`\")"
+      "Bash(grep -iE \"depart|team|project_types|project_status\\\\`|projects\\\\`|users\\\\`|task\\\\`\")",
+      "Bash(grep -nE \"^#{1,4} *\\(C-[0-9]+|Contradiction [0-9]+\\)\" PMS_Contradictions_Requiring_Decision.md)",
+      "Bash(grep -n \"^#\\\\{1,3\\\\} \" 2026-08-20-table-functionality-and-relationship-report.md)",
+      "Bash(cd \"/Users/sauravkaushik/Developer/pms\" && rm \"PMS Questions and Query - Sheet1.csv.bak\")",
+      "Bash(cp \"PMS Questions and Query - Sheet1.csv\" \"PMS Questions and Query - Sheet1.csv.bak\")",
+      "Bash(rm \"PMS Questions and Query - Sheet1.csv.bak\")",
+      "Bash(echo \"=== .mcp-servers/package.json ===\"; cat .mcp-servers/package.json; echo; echo \"=== node_modules present? ===\"; ls .mcp-servers/node_modules 2>/dev/null | head; echo \"=== .env \\(redacted\\) ===\"; sed 's/=.*/=<redacted>/' .env)",
+      "Bash(timeout 25 sh -c '. /Users/sauravkaushik/Developer/pms/.env && ALLOW_INSERT_OPERATION=false ALLOW_UPDATE_OPERATION=false ALLOW_DELETE_OPERATION=false ALLOW_DDL_OPERATION=false exec /Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/node /Users/sauravkaushik/Developer/pms/.mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/index.js')",
+      "Bash(echo \"--- exit: $? ---\")",
+      "Bash(sh -c '. /Users/sauravkaushik/Developer/pms/.env && ALLOW_INSERT_OPERATION=false ALLOW_UPDATE_OPERATION=false ALLOW_DELETE_OPERATION=false ALLOW_DDL_OPERATION=false exec /Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/node /Users/sauravkaushik/Developer/pms/.mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/index.js')",
+      "Bash(echo \"--- pipeline exit: $? ---\")",
+      "Bash(sh -c 'set -a; . /Users/sauravkaushik/Developer/pms/.env; ALLOW_INSERT_OPERATION=false; ALLOW_UPDATE_OPERATION=false; ALLOW_DELETE_OPERATION=false; ALLOW_DDL_OPERATION=false; set +a; exec /Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/node /Users/sauravkaushik/Developer/pms/.mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/index.js')"
     ],
     "additionalDirectories": [
-      "/Users/sauravkaushik/Developer/AI/PMS"
+      "/Users/sauravkaushik/Developer/AI/PMS",
+      "/Users/sauravkaushik/Developer/pms"
     ]
   }
 }

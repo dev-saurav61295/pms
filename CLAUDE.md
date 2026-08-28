@@ -63,9 +63,29 @@ Read-only by construction and it must stay that way — the DB user is `engagedb
 
 ### If the MCP server won't start
 
-`.mcp.json` launches the server via **absolute paths**, and it sources `.env` and the node binary from those paths. They currently point at this directory (`/Users/sauravkaushik/Developer/pms/`), but they previously pointed at a since-deleted `/Users/sauravkaushik/Developer/AI/PMS/` — so **path drift is the first thing to check** if the server fails.
+**The config file must be `.mcp.json` (leading dot) at the repo root.** A file named `mcp.json` is silently ignored by Claude Code — the server simply never appears in the tool list. Both `.env` and `.mcp.json` are gitignored, so neither is recoverable from git if lost.
 
-The failure mode is silent and misleading: the launcher is a `sh -c` that starts with `. <path>/.env`, and POSIX `sh` exits immediately when the `.` builtin can't open its file. Node never launches, the stdio pipe closes, and the client reports only `MCP error -32000: Connection closed`. To diagnose, run the `command`/`args` from `.mcp.json` by hand — a working server stays alive and silent; a broken one prints `sh: <path>: No such file or directory` and exits at once.
+**The server is `@benborla29/mcp-server-mysql` v2.0.9, installed locally** at `.mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/index.js`. It is **not** `@modelcontextprotocol/server-mysql` — that package does not exist on npm (404), and an `npx -y` config pointing at it dies instantly with `CONNECTION_CLOSED`. That broken config is what sits in git history; don't restore it.
+
+**This server reads different env var names than the Python scripts do.** It wants `MYSQL_PASS` and `MYSQL_DB`; `.env` defines `MYSQL_PASSWORD` and `MYSQL_DATABASE` (which is correct for `pms sql verifier.py` / `table_empty_report.py` — do not rename them there). The launcher therefore maps them. Symptom of a missing map: the tool description reads `(Multi-DB mode enabled)` and queries fail to reach `engagedb`.
+
+**Sourcing `.env` needs `set -a`.** The file has no `export` prefixes, so a bare `. .env` sets *shell* variables that the node child process never inherits. `set -a` before sourcing (and `set +a` after) exports them.
+
+The working launcher, verified 2026-08-28:
+```sh
+sh -c 'set -a; . /Users/sauravkaushik/Developer/pms/.env; \
+  MYSQL_PASS="$MYSQL_PASSWORD"; MYSQL_DB="$MYSQL_DATABASE"; \
+  ALLOW_INSERT_OPERATION=false; ALLOW_UPDATE_OPERATION=false; \
+  ALLOW_DELETE_OPERATION=false; ALLOW_DDL_OPERATION=false; set +a; \
+  exec /Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/node \
+       /Users/sauravkaushik/Developer/pms/.mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/index.js'
+```
+
+**Node must be an absolute path** — it is nvm-managed (`~/.nvm/versions/node/v20.12.2/bin/node`), and MCP servers launch without your shell profile, so nvm's shims are not on `PATH`.
+
+**Other silent failure modes:** the `sh -c` starts with `. <path>/.env`, and POSIX `sh` exits immediately when the `.` builtin can't open that file — node never launches, the pipe closes, and the client reports only `Connection closed`. Absolute paths previously pointed at a since-deleted `/Users/sauravkaushik/Developer/AI/PMS/`, so **path drift is worth checking** too.
+
+**To diagnose by hand:** run the `command`/`args` from `.mcp.json` and pipe in an `initialize` request — a healthy server replies with a JSON-RPC result naming the `mysql_query` tool, marked `(READ-ONLY)` and *without* `(Multi-DB mode enabled)`. A broken one prints a shell/npm error and exits at once.
 
 `.claude/settings.json` still lists the dead `/Users/sauravkaushik/Developer/AI/PMS` under `additionalDirectories`; harmless, but ignore it as a path reference.
 
