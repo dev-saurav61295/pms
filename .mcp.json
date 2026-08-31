@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "mysql": {
+      "command": "sh",
+      "args": [
+        "-c",
+        "set -a; . /Users/sauravkaushik/Developer/pms/.env; MYSQL_PASS=\"$MYSQL_PASSWORD\"; MYSQL_DB=\"$MYSQL_DATABASE\"; ALLOW_INSERT_OPERATION=false; ALLOW_UPDATE_OPERATION=false; ALLOW_DELETE_OPERATION=false; ALLOW_DDL_OPERATION=false; set +a; exec /Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/node /Users/sauravkaushik/Developer/pms/.mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/index.js"
+      ]
+    }
+  }
+}
