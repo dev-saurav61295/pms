@@ -1,4 +1,4 @@
-Primary Question,Alternative Phrasing 1,Alternative Phrasing 2,Required Parameters,SQL Query (Existing or Recovered),Testing Parameter,Bridge Tool Mapping,Suggested Tool Name
+Primary Question,Alternative Phrasing 1,Alternative Phrasing 2,Required Parameters,SQL Query (Existing or Recovered),Testing Parameter,Bridge Tool Mapping,Suggested Tool Name,Tool Description
 What are my active projects?,Show the projects I am currently working on.,List my ongoing projects.,current_user,"SELECT DISTINCT
     p.project_id,
     p.project_unique_id,
@@ -23,16 +23,16 @@ WHERE u.email = :current_user  AND pu.request_status = 'A'
   AND pu.status = 1
   AND p.status = 1
   AND p.archive = 0
-ORDER BY p.title ASC",saurav.kaushik@intglobal.com,Tool,get_emp_projects
-Which projects am I managing?,Show projects where I am the project manager.,List projects managed by me.,current_user,"SELECT p.project_id, p.project_unique_id, p.project_key, p.title, p.start_date, p.end_date, ps.status_name, st.stage_name, p.priority, p.rag FROM tbl_projects p LEFT JOIN tbl_project_status ps ON ps.status_id = p.project_status_id LEFT JOIN tbl_project_stages st ON st.stage_id = p.project_stage_id WHERE p.pm_user_id = :current_user_id AND p.status = 1 AND p.archive = 0 ORDER BY p.end_date, p.title;",80,Tool,get_emp_managed_projects
-Which projects do I own?,Show projects where I am the owner.,List projects owned by me.,current_user,"SELECT p.project_id, p.project_unique_id, p.project_key, p.title, p.start_date, p.end_date, ps.status_name, st.stage_name, p.priority, p.rag FROM tbl_projects p LEFT JOIN tbl_project_status ps ON ps.status_id = p.project_status_id LEFT JOIN tbl_project_stages st ON st.stage_id = p.project_stage_id WHERE p.project_owner_id = :current_user_id AND p.status = 1 AND p.archive = 0 ORDER BY p.end_date, p.title;",80,Tool,get_emp_owned_projects
-Show details of project :project_name.,Give me the project information for :project_name.,Open the summary of :project_name.,project_name,,,Needs SQL (Tool),get_project_details
-What is the status of project :project_name?,Show the current status of :project_name.,Is :project_name active or completed?,project_name,"SELECT p.project_id, p.project_key, p.title, p.project_status_id, ps.status_name, ps.color_code FROM tbl_projects p LEFT JOIN tbl_project_status ps ON ps.status_id = p.project_status_id WHERE p.title = :project_name AND p.status = 1 AND p.archive = 0 ORDER BY p.project_id;",,Tool,get_project_status
-What stage is :project_name in?,Show the current stage of :project_name.,Which delivery stage has :project_name reached?,project_name,"SELECT p.project_id, p.project_key, p.title, p.project_stage_id, st.stage_name, st.color_code FROM tbl_projects p LEFT JOIN tbl_project_stages st ON st.stage_id = p.project_stage_id WHERE p.title = :project_name AND p.status = 1 AND p.archive = 0 ORDER BY p.project_id;",,Tool,get_project_stage
-What is the RAG status of :project_name?,Show the health colour of :project_name.,"Is :project_name red, amber, or green?",project_name,"SELECT p.project_id, p.project_key, p.title, p.rag FROM tbl_projects p WHERE p.title = :project_name AND p.status = 1 AND p.archive = 0 ORDER BY p.project_id;",,Tool,get_project_rag
-What priority code is stored for :project_name?,Show the stored priority value for :project_name.,What is the current project priority code for :project_name?,project_name or project_unique_id,"SELECT p.project_id, p.project_unique_id, p.project_key, p.title, p.priority FROM tbl_projects p WHERE (p.project_unique_id = :project_identifier OR p.project_key = :project_identifier OR p.title = :project_identifier) AND p.status = 1 AND p.archive = 0 ORDER BY p.project_id;",,Tool,get_project_priority
-Which projects start between :start_date and :end_date?,Show projects beginning in the selected period.,List upcoming project starts.,"start_date, end_date","SELECT p.project_id, p.project_key, p.title, p.start_date, p.end_date, ps.status_name, p.rag FROM tbl_projects p LEFT JOIN tbl_project_status ps ON ps.status_id = p.project_status_id WHERE p.start_date >= :start_date AND p.start_date < DATE_ADD(:end_date, INTERVAL 1 DAY) AND p.status = 1 AND p.archive = 0 ORDER BY p.start_date, p.title;",,Tool,get_projects_starting_in_range
-Which projects end between :start_date and :end_date?,Show projects scheduled to finish in the selected period.,List upcoming project end dates.,"start_date, end_date","SELECT p.project_id, p.project_key, p.title, p.start_date, p.end_date, ps.status_name, p.rag FROM tbl_projects p LEFT JOIN tbl_project_status ps ON ps.status_id = p.project_status_id WHERE p.end_date >= :start_date AND p.end_date < DATE_ADD(:end_date, INTERVAL 1 DAY) AND p.status = 1 AND p.archive = 0 ORDER BY p.end_date, p.title;",,Tool,get_projects_ending_in_range
+ORDER BY p.title ASC",saurav.kaushik@intglobal.com,Tool,get_my_active_projects,"Lists the signed-in user's active, non-archived projects via team membership (tbl_project_users), so it includes projects they neither manage nor own. Params: current_user (email). Use get_my_managed_projects or get_my_owned_projects for the PM-only or owner-only views."
+Which projects am I managing?,Show projects where I am the project manager.,List projects managed by me.,current_user,"SELECT p.project_id, p.project_unique_id, p.project_key, p.title, p.start_date, p.end_date, ps.status_name, st.stage_name, p.priority, p.rag FROM tbl_projects p LEFT JOIN tbl_project_status ps ON ps.status_id = p.project_status_id LEFT JOIN tbl_project_stages st ON st.stage_id = p.project_stage_id WHERE p.pm_user_id = :current_user_id AND p.status = 1 AND p.archive = 0 ORDER BY p.end_date, p.title;",80,Tool,get_my_managed_projects,"Lists active, non-archived projects where the signed-in user is the assigned project manager (tbl_projects.pm_user_id). Params: current_user_id (numeric user_id). Narrower than get_my_active_projects, which returns every project the user is a member of."
+Which projects do I own?,Show projects where I am the owner.,List projects owned by me.,current_user,"SELECT p.project_id, p.project_unique_id, p.project_key, p.title, p.start_date, p.end_date, ps.status_name, st.stage_name, p.priority, p.rag FROM tbl_projects p LEFT JOIN tbl_project_status ps ON ps.status_id = p.project_status_id LEFT JOIN tbl_project_stages st ON st.stage_id = p.project_stage_id WHERE p.project_owner_id = :current_user_id AND p.status = 1 AND p.archive = 0 ORDER BY p.end_date, p.title;",80,Tool,get_my_owned_projects,"Lists active, non-archived projects where the signed-in user is the project owner (tbl_projects.project_owner_id). Params: current_user_id (numeric user_id). Owner and PM are separate fields - use get_my_managed_projects for the PM view."
+Show details of project :project_name.,Give me the project information for :project_name.,Open the summary of :project_name.,project_name,,,Needs SQL (Tool),get_project_details,"Intended to return the full profile of one project. SQL NOT YET WRITTEN - not executable. Params: project_name. Compose from get_project_status, get_project_stage, get_project_rag and get_project_hours_summary instead."
+What is the status of project :project_name?,Show the current status of :project_name.,Is :project_name active or completed?,project_name,"SELECT p.project_id, p.project_key, p.title, p.project_status_id, ps.status_name, ps.color_code FROM tbl_projects p LEFT JOIN tbl_project_status ps ON ps.status_id = p.project_status_id WHERE p.title = :project_name AND p.status = 1 AND p.archive = 0 ORDER BY p.project_id;",,Tool,get_project_status,"Returns the current workflow status of one project, resolved through tbl_project_status. Params: project_name (exact match on tbl_projects.title). Returns nothing for inactive or archived projects. Stage is a separate field - see get_project_stage."
+What stage is :project_name in?,Show the current stage of :project_name.,Which delivery stage has :project_name reached?,project_name,"SELECT p.project_id, p.project_key, p.title, p.project_stage_id, st.stage_name, st.color_code FROM tbl_projects p LEFT JOIN tbl_project_stages st ON st.stage_id = p.project_stage_id WHERE p.title = :project_name AND p.status = 1 AND p.archive = 0 ORDER BY p.project_id;",,Tool,get_project_stage,"Returns the current delivery stage of one project, resolved through tbl_project_stages. Params: project_name (exact title). Status and stage are different fields - get_project_status covers status."
+What is the RAG status of :project_name?,Show the health colour of :project_name.,"Is :project_name red, amber, or green?",project_name,"SELECT p.project_id, p.project_key, p.title, p.rag FROM tbl_projects p WHERE p.title = :project_name AND p.status = 1 AND p.archive = 0 ORDER BY p.project_id;",,Tool,get_project_rag,Returns the stored RAG health colour (Red/Amber/Green) of one project. Params: project_name (exact title). Project-level RAG only - task-level RAG is get_red_rag_tasks.
+What priority code is stored for :project_name?,Show the stored priority value for :project_name.,What is the current project priority code for :project_name?,project_name or project_unique_id,"SELECT p.project_id, p.project_unique_id, p.project_key, p.title, p.priority FROM tbl_projects p WHERE (p.project_unique_id = :project_identifier OR p.project_key = :project_identifier OR p.title = :project_identifier) AND p.status = 1 AND p.archive = 0 ORDER BY p.project_id;",,Tool,get_project_priority,"Returns the stored priority code of one project. Params: project_identifier - accepts project_unique_id, project_key or title, so it works when the caller does not know which identifier they hold. Returns the raw stored value, not a resolved label."
+Which projects start between :start_date and :end_date?,Show projects beginning in the selected period.,List upcoming project starts.,"start_date, end_date","SELECT p.project_id, p.project_key, p.title, p.start_date, p.end_date, ps.status_name, p.rag FROM tbl_projects p LEFT JOIN tbl_project_status ps ON ps.status_id = p.project_status_id WHERE p.start_date >= :start_date AND p.start_date < DATE_ADD(:end_date, INTERVAL 1 DAY) AND p.status = 1 AND p.archive = 0 ORDER BY p.start_date, p.title;",,Tool,get_projects_starting_in_range,"Lists active projects whose start date falls inside an inclusive window. Use for upcoming kick-offs, 'projects starting this month'. Params: start_date, end_date (YYYY-MM-DD, both inclusive)."
+Which projects end between :start_date and :end_date?,Show projects scheduled to finish in the selected period.,List upcoming project end dates.,"start_date, end_date","SELECT p.project_id, p.project_key, p.title, p.start_date, p.end_date, ps.status_name, p.rag FROM tbl_projects p LEFT JOIN tbl_project_status ps ON ps.status_id = p.project_status_id WHERE p.end_date >= :start_date AND p.end_date < DATE_ADD(:end_date, INTERVAL 1 DAY) AND p.status = 1 AND p.archive = 0 ORDER BY p.end_date, p.title;",,Tool,get_projects_ending_in_range,"Lists active projects whose end date falls inside an inclusive window. Use for upcoming delivery commitments, 'projects finishing this quarter'. Params: start_date, end_date (YYYY-MM-DD, both inclusive)."
 Which projects are overdue?,Show active projects past their end date.,List delayed projects.,as_of_date,"SELECT
     p.project_id,
     p.project_unique_id,
@@ -74,7 +74,7 @@ GROUP BY
     p.rag
 ORDER BY
     overdue_days DESC,
-    overdue_tasks DESC;",,Tool,get_overdue_projects
+    overdue_tasks DESC;",,Tool,get_overdue_projects,"Lists active projects past their end date, with days overdue and overdue task counts. Use for delayed or late projects at portfolio level. Params: as_of_date (the published SQL anchors on CURDATE()). Project-level only - for late tasks use get_at_risk_tasks."
 Show active projects for department :department_name.,Which active projects belong to :department_name?,Give me the project portfolio for :department_name.,department_name,"-- Resolved 2026-08-27: department membership is via tbl_group_projects + tbl_groups, not tbl_projects.department_id (supersedes the earlier department_id-based reading)
 SELECT p.project_id, p.project_unique_id, p.project_key, p.title, p.start_date, p.end_date, p.rag, g.name AS department_name
 FROM tbl_group_projects gp
@@ -83,9 +83,9 @@ JOIN tbl_projects p ON p.project_id = gp.project_id
 WHERE g.name = :department_name
   AND p.status = 1 AND p.archive = 0
   AND gp.project_id <> 0   -- tbl_group_projects can carry a project_id=0 sentinel row per group
-ORDER BY p.end_date, p.title;",,Tool,get_department_projects
-Show projects of type :project_type.,List :project_type projects.,Which projects use project type :project_type?,project_type,"SELECT p.project_id, p.project_key, p.title, pt.project_type, ps.status_name, p.start_date, p.end_date FROM tbl_projects p JOIN tbl_project_types pt ON pt.project_type_id = p.project_type_id LEFT JOIN tbl_project_status ps ON ps.status_id = p.project_status_id WHERE pt.project_type = :project_type AND p.status = 1 AND p.archive = 0 ORDER BY p.title;",,Tool,get_projects_by_type
-Show projects for client :client_name.,List projects associated with :client_name.,Which projects belong to :client_name?,client_name,,,Needs SQL (Tool),get_client_projects
+ORDER BY p.end_date, p.title;",,Tool,get_department_projects,"Lists active projects in one department. Membership resolves via tbl_group_projects + tbl_groups (authoritative, confirmed 2026-08-27), not tbl_projects.department_id, which returns a different set. Params: department_name (tbl_groups.name). Excludes the project_id = 0 sentinel."
+Show projects of type :project_type.,List :project_type projects.,Which projects use project type :project_type?,project_type,"SELECT p.project_id, p.project_key, p.title, pt.project_type, ps.status_name, p.start_date, p.end_date FROM tbl_projects p JOIN tbl_project_types pt ON pt.project_type_id = p.project_type_id LEFT JOIN tbl_project_status ps ON ps.status_id = p.project_status_id WHERE pt.project_type = :project_type AND p.status = 1 AND p.archive = 0 ORDER BY p.title;",,Tool,get_projects_by_type,"Lists active projects of one project type, joined through tbl_project_types. Params: project_type (name as stored in tbl_project_types.project_type). For delivery performance compared across types use get_delay_rates_by_segment."
+Show projects for client :client_name.,List projects associated with :client_name.,Which projects belong to :client_name?,client_name,,,Needs SQL (Tool),get_client_projects,Intended to list active projects for one client. SQL NOT YET WRITTEN - tbl_projects.client_id (int) to tbl_clients.client_id (varchar) is a type mismatch not verified live. Params: client_name. Report the blocker; do not invent the join.
 How many active users are allocated to :project_name?,Show the team size of :project_name.,How many people are on :project_name?,project_name,"SELECT
     p.project_id,
     p.project_unique_id,
@@ -108,8 +108,8 @@ GROUP BY
     p.project_id,
     p.project_unique_id,
     p.project_key,
-    p.title;",,Tool,get_project_active_user_count
-Which projects do not have a project manager?,Show projects with no PM assigned.,List unowned PM assignments.,none,"SELECT p.project_id, p.project_key, p.title, p.start_date, p.end_date, ps.status_name FROM tbl_projects p LEFT JOIN tbl_project_status ps ON ps.status_id = p.project_status_id WHERE p.pm_user_id IS NULL AND p.status = 1 AND p.archive = 0 ORDER BY p.title;",,Tool,get_projects_without_pm
+    p.title;",,Tool,get_project_active_user_count,Returns the count of active allocated users (team size) on one project. Params: project_name (exact title). For the member list rather than the count use get_project_team.
+Which projects do not have a project manager?,Show projects with no PM assigned.,List unowned PM assignments.,none,"SELECT p.project_id, p.project_key, p.title, p.start_date, p.end_date, ps.status_name FROM tbl_projects p LEFT JOIN tbl_project_status ps ON ps.status_id = p.project_status_id WHERE p.pm_user_id IS NULL AND p.status = 1 AND p.archive = 0 ORDER BY p.title;",,Tool,get_projects_without_pm,"Lists active, non-archived projects with no project manager assigned (pm_user_id IS NULL). Use for PM-ownership governance checks. Params: none."
 Which active projects have no allocated users?,Show projects without team members.,List active projects with an empty team.,none,"SELECT
     p.project_id,
     p.project_key,
@@ -129,8 +129,8 @@ WHERE
     AND p.archive = 0
     AND pu.project_id IS NULL
 ORDER BY
-    p.title;",,Tool,get_projects_without_team
-What project records were updated recently for :project_name?,"Show recent project, task, issue, and risk activity for :project_name.",What activity has occurred on :project_name in the last :days days?,project_identifier; days,,,Needs SQL (Tool),get_project_recent_activity
+    p.title;",,Tool,get_projects_without_team,"Lists active, non-archived projects with no approved active member in tbl_project_users. Use for projects with nobody allocated. Params: none. Complements get_projects_without_pm, which checks the PM field rather than team membership."
+What project records were updated recently for :project_name?,"Show recent project, task, issue, and risk activity for :project_name.",What activity has occurred on :project_name in the last :days days?,project_identifier; days,,,Needs SQL (Tool),get_project_recent_activity,"Intended to return recently changed records for one project across projects, tasks, issues and risks. SQL NOT YET WRITTEN. Params: project_identifier, days. Substitutes: get_recently_updated_tasks, or get_dormant_projects for the inverse view."
 Give me a summary of active projects.,Show active project counts by status and stage.,Summarize the current project portfolio.,current_user_scope,"SELECT
     ps.status_name,
     st.stage_name,
@@ -148,10 +148,10 @@ GROUP BY
     st.stage_name
 ORDER BY
     ps.status_name,
-    st.stage_name;",,Tool,get_active_project_summary
-What is the task completion progress of milestone :milestone_name?,How many milestone tasks are completed?,Show completed versus open tasks for :milestone_name.,"milestone_name, project_name",,,Blocked - Data Not Available,
-Which milestone dates differ from their mapped task dates?,Show milestones with task schedules outside milestone dates.,List milestone schedule mismatches.,none,,,Blocked - Data Not Available,
-Who owns milestone :milestone_name?,Show the owner of :milestone_name.,Who is responsible for :milestone_name?,milestone_name,,,Blocked - Data Not Available,
+    st.stage_name;",,Tool,get_active_project_summary,Returns counts of active projects grouped by status and stage - portfolio composition. Params: current_user_scope (not applied; the query is organisation-wide). For a health rather than composition view use get_portfolio_health_summary.
+What is the task completion progress of milestone :milestone_name?,How many milestone tasks are completed?,Show completed versus open tasks for :milestone_name.,"milestone_name, project_name",,,Blocked - Data Not Available,get_milestone_task_progress,"Intended to report task completion progress for one milestone. NOT EXECUTABLE - milestone tables are empty in this instance, so no milestone-to-task mapping exists. Params: milestone_name, project_name. Report the gap; do not substitute project or task progress."
+Which milestone dates differ from their mapped task dates?,Show milestones with task schedules outside milestone dates.,List milestone schedule mismatches.,none,,,Blocked - Data Not Available,get_milestone_date_mismatches,Intended to list milestones whose dates conflict with their mapped task dates. NOT EXECUTABLE - milestone data is not populated in this instance. Params: none. The working project-level equivalent is get_projects_with_late_tasks.
+Who owns milestone :milestone_name?,Show the owner of :milestone_name.,Who is responsible for :milestone_name?,milestone_name,,,Blocked - Data Not Available,get_milestone_owner,Intended to return the owner of one milestone. NOT EXECUTABLE - milestone data is not populated in this instance. Params: milestone_name.
 What are my open tasks?,Show tasks assigned to me that are not closed.,List my pending work items.,current_user,"SELECT p.title AS project_title, t.task_id, t.reference_no, t.title AS task_title,
        t.due_date, ts.status_name, t.priority, t.rag, t.percent_complete, tu.allot_percentage
 FROM tbl_project_task_users tu
@@ -163,8 +163,8 @@ WHERE tu.user_id = :current_user_id
   AND t.status = 1 AND t.archive = 0
   AND p.status = 1 AND p.archive = 0
   AND ts.status_type IN (1,2,4,6)   -- open: New/In Progress/UAT/Reopened -- confirm UAT/Reopened treatment with developer
-ORDER BY t.due_date, t.reference_no;",3066,Tool,get_emp_open_tasks
-Which of my tasks are due today?,Show my tasks with today’s due date.,What work is due for me today?,"current_user, current_date","SELECT t.task_id, t.reference_no, t.title, p.title AS project_title, t.due_date, ts.status_name, t.priority, t.rag, t.percent_complete FROM tbl_project_task_users tu JOIN tbl_project_tasks t ON t.task_id = tu.task_id JOIN tbl_projects p ON p.project_id = t.project_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE tu.user_id = :current_user_id AND tu.status = 1 AND t.status = 1 AND t.archive = 0 AND DATE(t.due_date) = CURRENT_DATE ORDER BY t.due_date, t.reference_no;",,Tool,get_emp_tasks_due_today
+ORDER BY t.due_date, t.reference_no;",3066,Tool,get_my_open_tasks,"Lists open tasks assigned to the signed-in user. Use for 'my tasks' or 'my pending work'. Params: current_user (numeric user_id in the published SQL). Open is resolved via tbl_project_task_status.status_type, never a hardcoded status id."
+Which of my tasks are due today?,Show my tasks with today’s due date.,What work is due for me today?,"current_user, current_date","SELECT t.task_id, t.reference_no, t.title, p.title AS project_title, t.due_date, ts.status_name, t.priority, t.rag, t.percent_complete FROM tbl_project_task_users tu JOIN tbl_project_tasks t ON t.task_id = tu.task_id JOIN tbl_projects p ON p.project_id = t.project_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE tu.user_id = :current_user_id AND tu.status = 1 AND t.status = 1 AND t.archive = 0 AND DATE(t.due_date) = CURRENT_DATE ORDER BY t.due_date, t.reference_no;",,Tool,get_my_tasks_due_today,"Lists the signed-in user's tasks due today. Params: current_user, current_date. For everything still open regardless of date use get_my_open_tasks."
 Which of my tasks are overdue?,Show my delayed tasks.,List my open tasks past their due date.,"current_user, as_of_date","SELECT
     pt.task_id,
     pt.title AS task_name,
@@ -184,8 +184,8 @@ WHERE
     AND pt.due_date < CURDATE()
 ORDER BY
     overdue_days DESC,
-    pt.due_date;",,Tool,get_emp_overdue_tasks
-Show tasks assigned to :employee_name.,List :employee_name’s tasks.,What work is assigned to :employee_name?,employee_name,"SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, p.title AS project_title, t.task_id, t.reference_no, t.title AS task_title, t.due_date, ts.status_name, tu.allot_percentage FROM tbl_users u JOIN tbl_project_task_users tu ON tu.user_id = u.user_id JOIN tbl_project_tasks t ON t.task_id = tu.task_id JOIN tbl_projects p ON p.project_id = t.project_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE CONCAT_WS(' ', u.first_name, u.last_name) = :employee_name AND tu.status = 1 AND t.status = 1 AND t.archive = 0 ORDER BY p.title, t.due_date, t.reference_no;",,Tool,get_employee_tasks
+    pt.due_date;",,Tool,get_my_overdue_tasks,"Lists the signed-in user's incomplete tasks past their due date, with days overdue. Params: current_user, as_of_date. Caveat: the published SQL hardcodes user_id 3066 - bind it to the caller before execution."
+Show tasks assigned to :employee_name.,List :employee_name’s tasks.,What work is assigned to :employee_name?,employee_name,"SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, p.title AS project_title, t.task_id, t.reference_no, t.title AS task_title, t.due_date, ts.status_name, tu.allot_percentage FROM tbl_users u JOIN tbl_project_task_users tu ON tu.user_id = u.user_id JOIN tbl_project_tasks t ON t.task_id = tu.task_id JOIN tbl_projects p ON p.project_id = t.project_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE CONCAT_WS(' ', u.first_name, u.last_name) = :employee_name AND tu.status = 1 AND t.status = 1 AND t.archive = 0 ORDER BY p.title, t.due_date, t.reference_no;",,Tool,get_employee_tasks,Lists tasks assigned to a named employee. Use for 'what is <person> working on'. Params: employee_name (exact match on first + last name). For the signed-in user use get_my_open_tasks.
 Show open tasks for :project_name.,List pending tasks under :project_name.,What work remains for :project_name?,project_name,"SELECT
     p.project_id,
     p.project_key,
@@ -212,7 +212,7 @@ WHERE
     AND pt.percent_complete < 100
 ORDER BY
     pt.due_date,
-    pt.priority DESC;",,Tool,get_project_open_tasks
+    pt.priority DESC;",,Tool,get_project_open_tasks,"Lists open tasks for one project. Params: project_name (exact title). Open means status_type IN (1,2,4,6) - New, In Progress, UAT, Reopened; confirm with the caller whether UAT and Reopened should count."
 Show completed tasks for :project_name.,List closed tasks under :project_name.,What tasks are finished in :project_name?,project_name,"SELECT
     p.project_id,
     p.project_key,
@@ -240,7 +240,7 @@ WHERE
     AND pt.percent_complete = 100
 ORDER BY
     pt.due_date DESC,
-    pt.title;",,Tool,get_project_completed_tasks
+    pt.title;",,Tool,get_project_completed_tasks,Lists closed tasks for one project. Params: project_name (exact title). Closed is status_type = 3; Abandoned (5) is deliberately not counted as complete.
 Which tasks are unassigned?,Show tasks with no active assignee.,List unallocated tasks.,project_scope,"SELECT
     pt.task_id,
     pt.title AS task_name,
@@ -263,7 +263,7 @@ WHERE
     AND tu.task_id IS NULL
 ORDER BY
     p.title,
-    pt.title",,Tool,get_unassigned_tasks
+    pt.title",,Tool,get_unassigned_tasks,Lists active tasks with no active assignee in tbl_project_task_users. Params: project_scope (optional filter; portfolio-wide if omitted). For a project-ranked view of the same gap use get_unassigned_task_ratio_projects.
 Show high-priority open tasks.,List urgent pending tasks.,Which open tasks have high priority?,project_scope,"SELECT
     p.project_id,
     p.project_key,
@@ -292,13 +292,13 @@ WHERE
 ORDER BY
     pt.due_date ASC,
     p.title,
-    pt.title",,Tool,get_high_priority_open_tasks
-Which tasks have a red RAG status?,Show red-health tasks.,List tasks flagged red.,project_scope,"SELECT t.task_id, t.reference_no, t.title, p.title AS project_title, t.rag, t.due_date, ts.status_name FROM tbl_project_tasks t JOIN tbl_projects p ON p.project_id = t.project_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE LOWER(t.rag) = 'red' AND t.status = 1 AND t.archive = 0 ORDER BY t.due_date, p.title;",,Tool,get_red_rag_tasks
-Which tasks are due between :start_date and :end_date?,Show tasks due in the selected period.,List upcoming task deadlines.,"start_date, end_date","SELECT t.task_id, t.reference_no, t.title, p.title AS project_title, t.due_date, ts.status_name, t.priority, t.rag FROM tbl_project_tasks t JOIN tbl_projects p ON p.project_id = t.project_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE t.due_date >= :start_date AND t.due_date < DATE_ADD(:end_date, INTERVAL 1 DAY) AND t.status = 1 AND t.archive = 0 ORDER BY t.due_date, p.title, t.reference_no;",,Tool,get_tasks_due_in_range
-Show details of task :task_reference.,Give me the task summary for :task_reference.,Open task :task_reference.,task_reference,"SELECT t.task_id, t.reference_no, t.title, t.description, p.project_id, p.title AS project_title, t.task_owner, t.start_date, t.due_date, t.task_status_id, ts.status_name, t.priority, t.rag, t.estimate, t.actual_hours, t.percent_complete, t.update_date FROM tbl_project_tasks t JOIN tbl_projects p ON p.project_id = t.project_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE t.reference_no = :task_reference AND t.status = 1 AND t.archive = 0;",,Tool,get_task_details
-Show subtasks of :task_reference.,List child tasks under :task_reference.,What tasks depend hierarchically on :task_reference?,task_reference,"SELECT c.task_id, c.reference_no, c.title, c.start_date, c.due_date, ts.status_name, c.priority, c.rag, c.percent_complete FROM tbl_project_tasks parent JOIN tbl_project_tasks c ON c.parent_id = parent.task_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = c.task_status_id WHERE parent.reference_no = :task_reference AND c.status = 1 AND c.archive = 0 ORDER BY c.due_date, c.reference_no;",,Tool,get_task_subtasks
-Who is assigned to task :task_reference?,Show all assignees for :task_reference.,Which users are allocated to :task_reference?,task_reference,"SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, u.email, tu.allot_percentage, tu.post_date AS assigned_on FROM tbl_project_tasks t JOIN tbl_project_task_users tu ON tu.task_id = t.task_id JOIN tbl_users u ON u.user_id = tu.user_id WHERE t.reference_no = :task_reference AND tu.status = 1 ORDER BY employee_name;",,Tool,get_task_assignees
-Show allocation percentages for task :task_reference.,How is task :task_reference allocated?,List assignees and percentages for :task_reference.,task_reference,"SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, tu.allot_percentage FROM tbl_project_tasks t JOIN tbl_project_task_users tu ON tu.task_id = t.task_id JOIN tbl_users u ON u.user_id = tu.user_id WHERE t.reference_no = :task_reference AND tu.status = 1 ORDER BY tu.allot_percentage DESC, employee_name;",,Tool,get_task_allocation_percentages
+    pt.title",,Tool,get_high_priority_open_tasks,"Lists open tasks with priority High. Params: project_scope (optional). priority is an ENUM of High/Medium/Low/Default/In Staging and must be compared as a quoted string, never a number."
+Which tasks have a red RAG status?,Show red-health tasks.,List tasks flagged red.,project_scope,"SELECT t.task_id, t.reference_no, t.title, p.title AS project_title, t.rag, t.due_date, ts.status_name FROM tbl_project_tasks t JOIN tbl_projects p ON p.project_id = t.project_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE LOWER(t.rag) = 'red' AND t.status = 1 AND t.archive = 0 ORDER BY t.due_date, p.title;",,Tool,get_red_rag_tasks,"Lists active tasks whose RAG is Red. Use for task-level health escalation. Params: project_scope (optional). Task RAG is distinct from project RAG, which is get_project_rag."
+Which tasks are due between :start_date and :end_date?,Show tasks due in the selected period.,List upcoming task deadlines.,"start_date, end_date","SELECT t.task_id, t.reference_no, t.title, p.title AS project_title, t.due_date, ts.status_name, t.priority, t.rag FROM tbl_project_tasks t JOIN tbl_projects p ON p.project_id = t.project_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE t.due_date >= :start_date AND t.due_date < DATE_ADD(:end_date, INTERVAL 1 DAY) AND t.status = 1 AND t.archive = 0 ORDER BY t.due_date, p.title, t.reference_no;",,Tool,get_tasks_due_in_range,"Lists active tasks due inside an inclusive date window. Use for deadlines this week or month. Params: start_date, end_date. All projects unless scoped; for the caller's own deadlines use get_my_tasks_due_today."
+Show details of task :task_reference.,Give me the task summary for :task_reference.,Open task :task_reference.,task_reference,"SELECT t.task_id, t.reference_no, t.title, t.description, p.project_id, p.title AS project_title, t.task_owner, t.start_date, t.due_date, t.task_status_id, ts.status_name, t.priority, t.rag, t.estimate, t.actual_hours, t.percent_complete, t.update_date FROM tbl_project_tasks t JOIN tbl_projects p ON p.project_id = t.project_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE t.reference_no = :task_reference AND t.status = 1 AND t.archive = 0;",,Tool,get_task_details,"Returns the full record of one task, including estimate, actual hours and completion. Use for 'show' or 'open task <ref>'. Params: task_reference (tbl_project_tasks.reference_no)."
+Show subtasks of :task_reference.,List child tasks under :task_reference.,What tasks depend hierarchically on :task_reference?,task_reference,"SELECT c.task_id, c.reference_no, c.title, c.start_date, c.due_date, ts.status_name, c.priority, c.rag, c.percent_complete FROM tbl_project_tasks parent JOIN tbl_project_tasks c ON c.parent_id = parent.task_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = c.task_status_id WHERE parent.reference_no = :task_reference AND c.status = 1 AND c.archive = 0 ORDER BY c.due_date, c.reference_no;",,Tool,get_task_subtasks,Lists the child tasks of one parent task via the parent_id hierarchy. Params: task_reference of the parent. This is the only task dependency structure confirmed populated - there is no general blocker graph.
+Who is assigned to task :task_reference?,Show all assignees for :task_reference.,Which users are allocated to :task_reference?,task_reference,"SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, u.email, tu.allot_percentage, tu.post_date AS assigned_on FROM tbl_project_tasks t JOIN tbl_project_task_users tu ON tu.task_id = t.task_id JOIN tbl_users u ON u.user_id = tu.user_id WHERE t.reference_no = :task_reference AND tu.status = 1 ORDER BY employee_name;",,Tool,get_task_assignees,"Lists the users actively assigned to one task, with allotted percentage. Use for 'who is working on <ref>'. Params: task_reference. Active assignments only (tbl_project_task_users.status = 1)."
+Show allocation percentages for task :task_reference.,How is task :task_reference allocated?,List assignees and percentages for :task_reference.,task_reference,"SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, tu.allot_percentage FROM tbl_project_tasks t JOIN tbl_project_task_users tu ON tu.task_id = t.task_id JOIN tbl_users u ON u.user_id = tu.user_id WHERE t.reference_no = :task_reference AND tu.status = 1 ORDER BY tu.allot_percentage DESC, employee_name;",,Tool,get_task_allocation_percentages,"Returns how one task's effort is split across assignees, by allotted percentage. Use when the caller asks how a task is divided rather than who is on it. Params: task_reference. Narrower than get_task_assignees."
 Which open tasks have no due date?,Show pending tasks missing deadlines.,List tasks without a due date.,project_scope,"SELECT
     p.project_id,
     p.project_key,
@@ -326,9 +326,9 @@ WHERE
 ORDER BY
     p.title,
     pt.priority DESC,
-    pt.title;",,Tool,get_tasks_without_due_date
-What is the completion percentage of task :task_reference?,Show progress for :task_reference.,How complete is :task_reference?,task_reference,"SELECT t.task_id, t.reference_no, t.title, t.percent_complete, ts.status_name, t.update_date FROM tbl_project_tasks t LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE t.reference_no = :task_reference AND t.status = 1 AND t.archive = 0;",,Tool,get_task_completion_percentage
-Compare estimate and actual hours for task :task_reference.,Show planned versus actual effort for :task_reference.,Is :task_reference over its estimate?,task_reference,"SELECT t.task_id, t.reference_no, t.title, t.estimate AS estimated_hours, t.actual_hours, (t.actual_hours - t.estimate) AS variance_hours, t.estimate_complete AS remaining_estimate_hours FROM tbl_project_tasks t WHERE t.reference_no = :task_reference AND t.status = 1 AND t.archive = 0;",,Tool,get_task_estimate_vs_actual
+    pt.title;",,Tool,get_tasks_without_due_date,"Lists open tasks with no due date set. Use for schedule-hygiene checks. Params: project_scope (optional). tbl_project_tasks.due_date holds genuine NULLs (live-verified), so the IS NULL test is valid on this column."
+What is the completion percentage of task :task_reference?,Show progress for :task_reference.,How complete is :task_reference?,task_reference,"SELECT t.task_id, t.reference_no, t.title, t.percent_complete, ts.status_name, t.update_date FROM tbl_project_tasks t LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE t.reference_no = :task_reference AND t.status = 1 AND t.archive = 0;",,Tool,get_task_completion_percentage,Returns the completion percentage of one task with its status. Params: task_reference. For effort rather than progress use get_task_estimate_vs_actual or get_task_logged_hours.
+Compare estimate and actual hours for task :task_reference.,Show planned versus actual effort for :task_reference.,Is :task_reference over its estimate?,task_reference,"SELECT t.task_id, t.reference_no, t.title, t.estimate AS estimated_hours, t.actual_hours, (t.actual_hours - t.estimate) AS variance_hours, t.estimate_complete AS remaining_estimate_hours FROM tbl_project_tasks t WHERE t.reference_no = :task_reference AND t.status = 1 AND t.archive = 0;",,Tool,get_task_estimate_vs_actual,"Compares estimated against actual hours for one task and returns the variance. Params: task_reference. Uses the stored actual_hours, not timesheet sums - get_task_logged_hours is the timesheet view and the two can disagree."
 Which tasks have exceeded their estimated hours?,Show tasks where actual hours are above estimate.,List effort-overrun tasks.,project_scope,"SELECT
     p.project_id,
     p.project_key,
@@ -353,8 +353,8 @@ WHERE
 ORDER BY
     variance_hours DESC,
     p.title,
-    t.title;",,Tool,get_tasks_over_estimate
-Which tasks were updated in the last :days days?,Show recently changed tasks.,List tasks updated recently.,days,"SELECT t.task_id, t.reference_no, t.title, p.title AS project_title, t.update_date, ts.status_name, t.percent_complete FROM tbl_project_tasks t JOIN tbl_projects p ON p.project_id = t.project_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE t.update_date >= DATE_SUB(NOW(), INTERVAL :days DAY) AND t.status = 1 AND t.archive = 0 ORDER BY t.update_date DESC;",,Tool,get_recently_updated_tasks
+    t.title;",,Tool,get_tasks_over_estimate,"Lists tasks whose actual hours exceed their estimate, with variance. Use for effort overruns and estimation-accuracy checks. Params: project_scope (optional; portfolio-wide if omitted)."
+Which tasks were updated in the last :days days?,Show recently changed tasks.,List tasks updated recently.,days,"SELECT t.task_id, t.reference_no, t.title, p.title AS project_title, t.update_date, ts.status_name, t.percent_complete FROM tbl_project_tasks t JOIN tbl_projects p ON p.project_id = t.project_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE t.update_date >= DATE_SUB(NOW(), INTERVAL :days DAY) AND t.status = 1 AND t.archive = 0 ORDER BY t.update_date DESC;",,Tool,get_recently_updated_tasks,Lists tasks updated within the last N days. Use for 'what changed recently'. Params: days (lookback window). The inverse view is get_stale_open_tasks.
 Which open tasks have not been updated in :days days?,Show stale pending tasks.,List inactive open tasks.,days,"SELECT
     p.project_id,
     p.project_key,
@@ -385,8 +385,8 @@ WHERE
 ORDER BY
     days_since_last_update DESC,
     p.title,
-    t.title;",,Tool,get_stale_open_tasks
-Show task counts by status for :project_name.,Summarize tasks by workflow status for :project_name.,How many tasks are in each status for :project_name?,project_name,"SELECT ts.task_status_id, ts.status_name, ts.status_type, COUNT(*) AS task_count FROM tbl_project_tasks t JOIN tbl_projects p ON p.project_id = t.project_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE p.title = :project_name AND t.status = 1 AND t.archive = 0 GROUP BY ts.task_status_id, ts.status_name, ts.status_type ORDER BY ts.status_order, ts.status_name;",,Tool,get_project_task_status_counts
+    t.title;",,Tool,get_stale_open_tasks,"Lists open tasks not updated for at least N days, with days since last update. Use for stale or forgotten tasks. Params: days. Complements get_recently_updated_tasks."
+Show task counts by status for :project_name.,Summarize tasks by workflow status for :project_name.,How many tasks are in each status for :project_name?,project_name,"SELECT ts.task_status_id, ts.status_name, ts.status_type, COUNT(*) AS task_count FROM tbl_project_tasks t JOIN tbl_projects p ON p.project_id = t.project_id LEFT JOIN tbl_project_task_status ts ON ts.task_status_id = t.task_status_id WHERE p.title = :project_name AND t.status = 1 AND t.archive = 0 GROUP BY ts.task_status_id, ts.status_name, ts.status_type ORDER BY ts.status_order, ts.status_name;",,Tool,get_project_task_status_counts,"Returns task counts for one project grouped by workflow status, including status_type so open and closed can be derived reliably. Params: project_name. Counts only - the row lists are get_project_open_tasks and get_project_completed_tasks."
 Show task workload by user for :project_name.,How many tasks does each person have on :project_name?,Summarize assigned tasks by team member.,project_name,"SELECT
     p.project_id,
     p.project_key,
@@ -420,14 +420,14 @@ GROUP BY
     u.last_name
 ORDER BY
     total_tasks DESC,
-    team_member;",,Tool,get_project_task_workload
-How many hours did I log today?,Show my time entries for today.,What is my total logged time today?,"current_user, current_date","SELECT ts.user_id, ts.timesheet_date, SUM(ts.hours * 60 + ts.minutes) / 60.0 AS total_hours FROM tbl_timesheets ts WHERE ts.user_id = :current_user_id AND ts.timesheet_date = CURRENT_DATE GROUP BY ts.user_id, ts.timesheet_date;",,Tool,get_emp_hours_today
-How many hours did I log between :start_date and :end_date?,Show my logged time for the selected period.,Total my timesheet hours for the period.,"current_user, start_date, end_date","SELECT ts.user_id, SUM(ts.hours * 60 + ts.minutes) / 60.0 AS total_hours FROM tbl_timesheets ts WHERE ts.user_id = :current_user_id AND ts.timesheet_date BETWEEN :start_date AND :end_date GROUP BY ts.user_id;",,Tool,get_emp_hours_in_range
-Show hours logged by :employee_name between :start_date and :end_date.,How much time did :employee_name record?,List :employee_name’s timesheet total.,"employee_name, start_date, end_date","SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, SUM(ts.hours * 60 + ts.minutes) / 60.0 AS total_hours FROM tbl_users u JOIN tbl_timesheets ts ON ts.user_id = u.user_id WHERE CONCAT_WS(' ', u.first_name, u.last_name) = :employee_name AND ts.timesheet_date BETWEEN :start_date AND :end_date GROUP BY u.user_id, u.first_name, u.last_name;",,Tool,get_employee_hours_in_range
-How many hours were logged on :project_name between :start_date and :end_date?,Show total project time for the period.,What is the booked effort on :project_name?,"project_name, start_date, end_date","SELECT p.project_id, p.title AS project_title, SUM(ts.hours * 60 + ts.minutes) / 60.0 AS total_hours FROM tbl_timesheets ts JOIN tbl_project_tasks t ON t.task_id = ts.task_id JOIN tbl_projects p ON p.project_id = t.project_id WHERE p.title = :project_name AND ts.timesheet_date BETWEEN :start_date AND :end_date GROUP BY p.project_id, p.title;",,Tool,get_project_hours_in_range
-Show hours by user for :project_name.,Who logged how much time on :project_name?,Break down project hours by team member.,"project_name, start_date, end_date","SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, SUM(ts.hours * 60 + ts.minutes) / 60.0 AS total_hours FROM tbl_timesheets ts JOIN tbl_project_tasks t ON t.task_id = ts.task_id JOIN tbl_projects p ON p.project_id = t.project_id JOIN tbl_users u ON u.user_id = ts.user_id WHERE p.title = :project_name AND ts.timesheet_date BETWEEN :start_date AND :end_date GROUP BY u.user_id, u.first_name, u.last_name ORDER BY total_hours DESC;",,Tool,get_project_hours_by_user
-How many hours were logged against task :task_reference?,Show booked time for :task_reference.,What is the total effort recorded on :task_reference?,"task_reference, start_date, end_date","SELECT t.task_id, t.reference_no, t.title, SUM(ts.hours * 60 + ts.minutes) / 60.0 AS total_hours FROM tbl_project_tasks t LEFT JOIN tbl_timesheets ts ON ts.task_id = t.task_id WHERE t.reference_no = :task_reference GROUP BY t.task_id, t.reference_no, t.title;",,Tool,get_task_logged_hours
-Show logged hours by project task type.,Break down timesheet hours by task type.,How much time was recorded for each task type?,"start_date, end_date",,,Needs SQL (Tool),get_hours_by_task_type
+    team_member;",,Tool,get_project_task_workload,"Returns per-member task workload for one project - task count, estimated and actual hours, average completion. Use for workload balance. Params: project_name. For time actually booked use get_project_hours_by_user."
+How many hours did I log today?,Show my time entries for today.,What is my total logged time today?,"current_user, current_date","SELECT ts.user_id, ts.timesheet_date, SUM(ts.hours * 60 + ts.minutes) / 60.0 AS total_hours FROM tbl_timesheets ts WHERE ts.user_id = :current_user_id AND ts.timesheet_date = CURRENT_DATE GROUP BY ts.user_id, ts.timesheet_date;",,Tool,get_my_hours_today,"Returns the signed-in user's total logged hours for today from tbl_timesheets. Params: current_user (numeric user_id), current_date."
+How many hours did I log between :start_date and :end_date?,Show my logged time for the selected period.,Total my timesheet hours for the period.,"current_user, start_date, end_date","SELECT ts.user_id, SUM(ts.hours * 60 + ts.minutes) / 60.0 AS total_hours FROM tbl_timesheets ts WHERE ts.user_id = :current_user_id AND ts.timesheet_date BETWEEN :start_date AND :end_date GROUP BY ts.user_id;",,Tool,get_my_hours_in_range,"Returns the signed-in user's total logged hours across an inclusive date range. Params: current_user (numeric user_id), start_date, end_date."
+Show hours logged by :employee_name between :start_date and :end_date.,How much time did :employee_name record?,List :employee_name’s timesheet total.,"employee_name, start_date, end_date","SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, SUM(ts.hours * 60 + ts.minutes) / 60.0 AS total_hours FROM tbl_users u JOIN tbl_timesheets ts ON ts.user_id = u.user_id WHERE CONCAT_WS(' ', u.first_name, u.last_name) = :employee_name AND ts.timesheet_date BETWEEN :start_date AND :end_date GROUP BY u.user_id, u.first_name, u.last_name;",,Tool,get_employee_hours_in_range,"Returns total logged hours for a named employee across an inclusive date range. Params: employee_name (exact first + last name), start_date, end_date. Use get_my_hours_in_range for the signed-in user."
+How many hours were logged on :project_name between :start_date and :end_date?,Show total project time for the period.,What is the booked effort on :project_name?,"project_name, start_date, end_date","SELECT p.project_id, p.title AS project_title, SUM(ts.hours * 60 + ts.minutes) / 60.0 AS total_hours FROM tbl_timesheets ts JOIN tbl_project_tasks t ON t.task_id = ts.task_id JOIN tbl_projects p ON p.project_id = t.project_id WHERE p.title = :project_name AND ts.timesheet_date BETWEEN :start_date AND :end_date GROUP BY p.project_id, p.title;",,Tool,get_project_hours_in_range,"Returns total hours logged against one project in a date range, from timesheets joined through its tasks. Params: project_name, start_date, end_date. Only time booked against that project's tasks counts."
+Show hours by user for :project_name.,Who logged how much time on :project_name?,Break down project hours by team member.,"project_name, start_date, end_date","SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, SUM(ts.hours * 60 + ts.minutes) / 60.0 AS total_hours FROM tbl_timesheets ts JOIN tbl_project_tasks t ON t.task_id = ts.task_id JOIN tbl_projects p ON p.project_id = t.project_id JOIN tbl_users u ON u.user_id = ts.user_id WHERE p.title = :project_name AND ts.timesheet_date BETWEEN :start_date AND :end_date GROUP BY u.user_id, u.first_name, u.last_name ORDER BY total_hours DESC;",,Tool,get_project_hours_by_user,"Returns hours logged on one project broken down by team member. Use for 'who spent how long on X'. Params: project_name, start_date, end_date. The project total without the split is get_project_hours_in_range."
+How many hours were logged against task :task_reference?,Show booked time for :task_reference.,What is the total effort recorded on :task_reference?,"task_reference, start_date, end_date","SELECT t.task_id, t.reference_no, t.title, SUM(ts.hours * 60 + ts.minutes) / 60.0 AS total_hours FROM tbl_project_tasks t LEFT JOIN tbl_timesheets ts ON ts.task_id = t.task_id WHERE t.reference_no = :task_reference GROUP BY t.task_id, t.reference_no, t.title;",,Tool,get_task_logged_hours,"Returns total timesheet hours logged against one task. Params: task_reference, optional start_date and end_date. This is the timesheet figure; the stored task actual_hours used by get_task_estimate_vs_actual can differ."
+Show logged hours by project task type.,Break down timesheet hours by task type.,How much time was recorded for each task type?,"start_date, end_date",,,Needs SQL (Tool),get_hours_by_task_type,"Intended to break down logged timesheet hours by project task type. SQL NOT YET WRITTEN. Params: start_date, end_date. Available today: get_project_hours_in_range and get_project_hours_by_user, neither of which segments by task type."
 Who has no timesheet entries for :date?,Show users who did not log time on :date.,List missing time entries for :date.,"date, population_scope","SELECT
     u.user_id,
     u.username,
@@ -444,7 +444,7 @@ WHERE
     AND u.is_block = 0
     AND ts.user_id IS NULL
 ORDER BY
-    user_name;",,Tool,get_missing_timesheet_users
+    user_name;",,Tool,get_missing_timesheet_users,"Lists enabled users with no timesheet entry for a given date. Use for timesheet-compliance chasing. Params: date, population_scope. Caveat: the published SQL hardcodes 2026-08-10 - bind :date before execution."
 Who logged more than :hours_threshold hours on :date?,Show high-hour timesheet entries.,List users exceeding the daily-hours threshold.,"date, hours_threshold","SELECT
     u.user_id,
     u.username,
@@ -472,7 +472,7 @@ GROUP BY
 HAVING
     ROUND(SUM(ts.hours) + (SUM(ts.minutes) / 60), 2) > 8    -- Replace with required threshold
 ORDER BY
-    total_logged_hours DESC;",,Tool,get_high_hour_timesheet_users
+    total_logged_hours DESC;",,Tool,get_high_hour_timesheet_users,"Lists users whose logged hours on a given date exceed a threshold. Use for outlier detection. Params: date, hours_threshold."
 Compare timesheet hours with task actual hours for :project_name.,Show discrepancies between booked time and task actual hours.,Do task actuals match timesheet totals?,project_name,"SELECT
     p.project_id,
     p.project_key,
@@ -510,13 +510,13 @@ GROUP BY
     pt.title,
     pt.actual_hours
 ORDER BY
-    variance_hours DESC;",,Tool,get_project_timesheet_vs_actual
-What is the approval status of my timesheet?,Show whether my timesheet is approved.,Are my time entries pending approval?,"current_user, period",,,Blocked - Data Not Available,
-Which timesheets were rejected?,Show rejected time entries.,List declined timesheets.,period,,,Blocked - Data Not Available,
-What projects am I allocated to?,Show my current project allocations.,List projects where I am a member.,"current_user, as_of_date","SELECT p.project_id, p.project_key, p.title, pu.access_type, pu.role_id, pu.allocation_from, pu.allocation_to, pu.allocation_hrs, pu.resource_type, pu.request_status FROM tbl_project_users pu JOIN tbl_projects p ON p.project_id = pu.project_id WHERE pu.user_id = :current_user_id AND pu.status = 1 AND pu.request_status = 'A' ORDER BY pu.allocation_from DESC, p.title;",,Tool,get_emp_allocations
-Show allocations for :employee_name.,Which projects is :employee_name allocated to?,List :employee_name’s project assignments.,"employee_name, as_of_date","SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, p.project_id, p.title AS project_title, pu.allocation_from, pu.allocation_to, pu.allocation_hrs, pu.resource_type, pu.access_type, pu.request_status FROM tbl_users u JOIN tbl_project_users pu ON pu.user_id = u.user_id JOIN tbl_projects p ON p.project_id = pu.project_id WHERE CONCAT_WS(' ', u.first_name, u.last_name) = :employee_name AND pu.status = 1 ORDER BY pu.allocation_from DESC, p.title;",,Tool,get_employee_allocations
-Who is allocated to :project_name?,Show the team of :project_name.,List project members for :project_name.,project_name,"SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, u.email, pu.access_type, pu.role_id, pu.allocation_from, pu.allocation_to, pu.allocation_hrs, pu.resource_type, pu.request_status FROM tbl_projects p JOIN tbl_project_users pu ON pu.project_id = p.project_id JOIN tbl_users u ON u.user_id = pu.user_id WHERE p.title = :project_name AND pu.status = 1 ORDER BY employee_name;",,Tool,get_project_team
-Show allocated hours by user for :project_name.,How many hours is each user allocated to :project_name?,List resource allocation hours for :project_name.,project_name,"SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, pu.allocation_hrs, pu.allocation_from, pu.allocation_to, pu.resource_type FROM tbl_projects p JOIN tbl_project_users pu ON pu.project_id = p.project_id JOIN tbl_users u ON u.user_id = pu.user_id WHERE p.title = :project_name AND pu.status = 1 AND pu.request_status = 'A' ORDER BY pu.allocation_hrs DESC, employee_name;",,Tool,get_project_allocated_hours
+    variance_hours DESC;",,Tool,get_project_timesheet_vs_actual,"Compares each task's stored actual hours against the sum of its timesheet entries for one project, with the variance. Use to check the two reconcile before trusting either as effort. Params: project_name."
+What is the approval status of my timesheet?,Show whether my timesheet is approved.,Are my time entries pending approval?,"current_user, period",,,Blocked - Data Not Available,get_my_timesheet_approval_status,"Intended to return the approval state of the signed-in user's timesheet. NOT EXECUTABLE - timesheet approval state is not captured in this instance, so approved, pending and rejected cannot be distinguished. Params: current_user, period."
+Which timesheets were rejected?,Show rejected time entries.,List declined timesheets.,period,,,Blocked - Data Not Available,get_rejected_timesheets,Intended to list rejected timesheets. NOT EXECUTABLE - no timesheet approval or rejection data is populated in this instance. Params: period.
+What projects am I allocated to?,Show my current project allocations.,List projects where I am a member.,"current_user, as_of_date","SELECT p.project_id, p.project_key, p.title, pu.access_type, pu.role_id, pu.allocation_from, pu.allocation_to, pu.allocation_hrs, pu.resource_type, pu.request_status FROM tbl_project_users pu JOIN tbl_projects p ON p.project_id = pu.project_id WHERE pu.user_id = :current_user_id AND pu.status = 1 AND pu.request_status = 'A' ORDER BY pu.allocation_from DESC, p.title;",,Tool,get_my_allocations,"Lists the projects the signed-in user is allocated to, with allocation hours, role and request status. Params: current_user, as_of_date. allocation_from/allocation_to are unpopulated here, so this is a current snapshot and as_of_date is not honoured."
+Show allocations for :employee_name.,Which projects is :employee_name allocated to?,List :employee_name’s project assignments.,"employee_name, as_of_date","SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, p.project_id, p.title AS project_title, pu.allocation_from, pu.allocation_to, pu.allocation_hrs, pu.resource_type, pu.access_type, pu.request_status FROM tbl_users u JOIN tbl_project_users pu ON pu.user_id = u.user_id JOIN tbl_projects p ON p.project_id = pu.project_id WHERE CONCAT_WS(' ', u.first_name, u.last_name) = :employee_name AND pu.status = 1 ORDER BY pu.allocation_from DESC, p.title;",,Tool,get_employee_allocations,"Lists project allocations for a named employee. Params: employee_name, as_of_date. Current snapshot only - allocation dates are unpopulated, so as_of_date has no effect."
+Who is allocated to :project_name?,Show the team of :project_name.,List project members for :project_name.,project_name,"SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, u.email, pu.access_type, pu.role_id, pu.allocation_from, pu.allocation_to, pu.allocation_hrs, pu.resource_type, pu.request_status FROM tbl_projects p JOIN tbl_project_users pu ON pu.project_id = p.project_id JOIN tbl_users u ON u.user_id = pu.user_id WHERE p.title = :project_name AND pu.status = 1 ORDER BY employee_name;",,Tool,get_project_team,"Lists the members allocated to one project, with access type, role, allocation hours and request status. Use for the team roster. Params: project_name. For the headcount alone use get_project_active_user_count."
+Show allocated hours by user for :project_name.,How many hours is each user allocated to :project_name?,List resource allocation hours for :project_name.,project_name,"SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, pu.allocation_hrs, pu.allocation_from, pu.allocation_to, pu.resource_type FROM tbl_projects p JOIN tbl_project_users pu ON pu.project_id = p.project_id JOIN tbl_users u ON u.user_id = pu.user_id WHERE p.title = :project_name AND pu.status = 1 AND pu.request_status = 'A' ORDER BY pu.allocation_hrs DESC, employee_name;",,Tool,get_project_allocated_hours,Returns allocated hours per user for one project. Params: project_name. Compare against time actually booked using get_project_hours_by_user; the allocation date columns are unpopulated in this instance.
 Whose project allocation ends in the next :days days?,Show allocations ending soon.,List users rolling off projects soon.,days,"-- Resolved 2026-08-27: allocation_to is not populated in this PMS instance -- this question cannot be answered from the data as it exists today.
 SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, p.project_id, p.title AS project_title, pu.allocation_to, pu.allocation_hrs, pu.resource_type
 FROM tbl_project_users pu
@@ -525,7 +525,7 @@ JOIN tbl_users u ON u.user_id = pu.user_id
 WHERE pu.status = 1 AND pu.request_status = 'A'
   AND pu.allocation_to >= CURRENT_DATE
   AND pu.allocation_to < DATE_ADD(CURRENT_DATE, INTERVAL :days + 1 DAY)
-ORDER BY pu.allocation_to, employee_name;",,Blocked - Data Not Available,
+ORDER BY pu.allocation_to, employee_name;",,Blocked - Data Not Available,get_allocations_ending_soon,Intended to list users whose allocation ends in the next N days. NOT EXECUTABLE - tbl_project_users.allocation_to is not populated (developer-confirmed 2026-08-27). Params: days. Report the gap rather than returning empty as if nobody were rolling off.
 Whose project allocation starts in the next :days days?,Show upcoming allocations.,List users joining projects soon.,days,"-- Resolved 2026-08-27: allocation_from is not populated in this PMS instance -- this question cannot be answered from the data as it exists today.
 SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, p.project_id, p.title AS project_title, pu.allocation_from, pu.allocation_to, pu.allocation_hrs, pu.resource_type
 FROM tbl_project_users pu
@@ -534,9 +534,9 @@ JOIN tbl_users u ON u.user_id = pu.user_id
 WHERE pu.status = 1 AND pu.request_status IN ('A','I')
   AND pu.allocation_from >= CURRENT_DATE
   AND pu.allocation_from < DATE_ADD(CURRENT_DATE, INTERVAL :days + 1 DAY)
-ORDER BY pu.allocation_from, employee_name;",,Blocked - Data Not Available,
-Show active users in department :department_name.,List department resources.,Who belongs to :department_name?,department_name,,,Needs SQL (Tool),get_department_users
-What skills does :employee_name have?,Show :employee_name’s recorded skills.,List skills for :employee_name.,employee_name,"SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, s.id AS skill_id, s.name AS skill_name FROM tbl_users u JOIN tbl_user_skills us ON us.user_id = u.user_id JOIN tbl_master_skills s ON s.id = us.skill_id WHERE CONCAT_WS(' ', u.first_name, u.last_name) = :employee_name AND us.status = '1' AND s.status = '1' ORDER BY s.name;",,Tool,get_employee_skills
+ORDER BY pu.allocation_from, employee_name;",,Blocked - Data Not Available,get_allocations_starting_soon,Intended to list users whose allocation starts in the next N days. NOT EXECUTABLE - tbl_project_users.allocation_from is not populated (developer-confirmed 2026-08-27). Params: days.
+Show active users in department :department_name.,List department resources.,Who belongs to :department_name?,department_name,,,Needs SQL (Tool),get_department_users,"Intended to list active users in one department. SQL NOT YET WRITTEN - the confirmed department path (tbl_group_projects + tbl_groups) maps projects to departments, not users, so the user-side path is undecided. Params: department_name."
+What skills does :employee_name have?,Show :employee_name’s recorded skills.,List skills for :employee_name.,employee_name,"SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, s.id AS skill_id, s.name AS skill_name FROM tbl_users u JOIN tbl_user_skills us ON us.user_id = u.user_id JOIN tbl_master_skills s ON s.id = us.skill_id WHERE CONCAT_WS(' ', u.first_name, u.last_name) = :employee_name AND us.status = '1' AND s.status = '1' ORDER BY s.name;",,Tool,get_employee_skills,Lists the recorded skills of a named employee from tbl_master_skills. Params: employee_name (exact first + last name). To search the other way round use get_available_users_by_skill.
 Who with skill :skill_name is available between :start_date and :end_date?,Find resources with :skill_name and no overlapping allocation.,Show available :skill_name resources.,"skill_name, start_date, end_date","-- Resolved 2026-08-27: allocation_from/allocation_to are not populated -- cannot evaluate a date-range overlap.
 -- Redefined as ""currently has no active allocation at all"" (drops :start_date/:end_date from the logic).
 SELECT u.user_id, u.username, CONCAT(u.first_name, ' ', u.last_name) AS user_name, us.skill_id
@@ -549,7 +549,7 @@ LEFT JOIN tbl_project_users pu
 WHERE u.enabled = 1 AND u.verified = 1 AND u.is_block = 0
   AND us.status = '1' AND us.skill_id = :skill_id
   AND pu.user_id IS NULL
-ORDER BY user_name;",,Tool,get_available_users_by_skill
+ORDER BY user_name;",,Tool,get_available_users_by_skill,"Lists users holding a given skill who currently have no active allocation. Params: skill_name, start_date, end_date. Allocation dates are unpopulated, so availability means no active allocation at all and the date range is not applied - say so when reporting."
 Which users have overlapping project allocations?,Show resource allocation conflicts.,List people assigned to overlapping project periods.,date_range,"SELECT
     pu.user_id,
     CONCAT(u.first_name, ' ', u.last_name) AS user_name,
@@ -566,9 +566,9 @@ GROUP BY
     u.last_name
 HAVING COUNT(DISTINCT pu.project_id) > 1
 ORDER BY
-    project_count DESC;",,Tool,get_users_with_overlapping_allocations
-Show project roles for :project_name.,List users and role IDs on :project_name.,Who has which role on :project_name?,project_name,"SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, pu.role_id, r.role_name, r.role_slug FROM tbl_projects p JOIN tbl_project_users pu ON pu.project_id = p.project_id JOIN tbl_users u ON u.user_id = pu.user_id LEFT JOIN tbl_roles r ON r.role_id = pu.role_id WHERE p.title = :project_name AND pu.status = 1 ORDER BY r.role_name, employee_name;",,Tool,get_project_roles
-Show access types for users on :project_name.,Who has what access on :project_name?,List project membership access levels.,project_name,"SELECT pu.access_type, COUNT(*) AS user_count FROM tbl_projects p JOIN tbl_project_users pu ON pu.project_id = p.project_id WHERE p.title = :project_name AND pu.status = 1 GROUP BY pu.access_type ORDER BY pu.access_type;",,Tool,get_project_access_types
+    project_count DESC;",,Tool,get_users_with_concurrent_allocations,"Lists users allocated to more than one active project at once, with a project count. Params: date_range (not honoured). True date overlap cannot be verified - allocation dates are unpopulated. With an explicit count threshold use get_users_over_project_count_threshold."
+Show project roles for :project_name.,List users and role IDs on :project_name.,Who has which role on :project_name?,project_name,"SELECT u.user_id, CONCAT_WS(' ', u.first_name, u.last_name) AS employee_name, pu.role_id, r.role_name, r.role_slug FROM tbl_projects p JOIN tbl_project_users pu ON pu.project_id = p.project_id JOIN tbl_users u ON u.user_id = pu.user_id LEFT JOIN tbl_roles r ON r.role_id = pu.role_id WHERE p.title = :project_name AND pu.status = 1 ORDER BY r.role_name, employee_name;",,Tool,get_project_roles,"Lists the users on one project with their role, resolved through tbl_roles. Params: project_name. For permission level rather than role use get_project_access_type_counts."
+Show access types for users on :project_name.,Who has what access on :project_name?,List project membership access levels.,project_name,"SELECT pu.access_type, COUNT(*) AS user_count FROM tbl_projects p JOIN tbl_project_users pu ON pu.project_id = p.project_id WHERE p.title = :project_name AND pu.status = 1 GROUP BY pu.access_type ORDER BY pu.access_type;",,Tool,get_project_access_type_counts,Returns the number of users on one project grouped by access type - the permission-level breakdown. Params: project_name. Counts only; for the per-user roster including access type use get_project_team.
 Who is currently on the bench?,Show users with no active project allocation.,List unallocated active resources.,"as_of_date, population_scope","SELECT
     u.user_id,
     u.username,
@@ -586,7 +586,7 @@ WHERE
     AND u.is_block = 0
     AND pu.user_id IS NULL
 ORDER BY
-    user_name;",,Tool,get_bench_users
+    user_name;",,Tool,get_bench_users,"Lists enabled, verified users with no active approved project allocation - the bench. Params: as_of_date, population_scope. A current snapshot: allocation dates are unpopulated, so as_of_date is not honoured."
 What is :employee_name’s allocation utilization for :period?,Show allocated hours versus capacity for :employee_name.,How utilized is :employee_name based on allocations?,"employee_name, period","SELECT
     u.user_id,
     CONCAT(u.first_name, ' ', u.last_name) AS employee_name,
@@ -600,7 +600,7 @@ WHERE
     AND pu.request_status = 'A'
 GROUP BY
     u.user_id,
-    employee_name;",,Tool,get_employee_allocation_utilization
+    employee_name;",,Tool,get_employee_allocation_utilization,"Returns total allocated hours for a named employee - the allocation-based utilisation input. Params: employee_name, period (not honoured; current total only). No weekly-capacity field is stored, so the caller supplies the denominator. Caveat: the SQL hardcodes an employee name."
 What is :employee_name’s timesheet utilization for :period?,Show logged hours versus available hours for :employee_name.,How utilized is :employee_name based on timesheets?,"employee_name, period","SELECT
     u.user_id,
     CONCAT(u.first_name, ' ', u.last_name) AS employee_name,
@@ -615,7 +615,7 @@ WHERE
     AND ts.timesheet_date BETWEEN '2026-08-01' AND '2026-08-31'
 GROUP BY
     u.user_id,
-    employee_name;",,Tool,get_employee_timesheet_utilization
+    employee_name;",,Tool,get_employee_timesheet_utilization,"Returns total logged hours for a named employee - the timesheet-based utilisation input. Params: employee_name, period. Unlike get_employee_allocation_utilization this side is genuinely period-scoped; the capacity denominator must still be supplied by the caller."
 Show utilization of resources on :project_name.,How utilized is the team on :project_name?,List project utilization by member.,"project_name, period","SELECT
     p.project_id,
     p.title AS project_name,
@@ -647,7 +647,7 @@ GROUP BY
     u.user_id,
     employee_name
 ORDER BY
-    employee_name;",,Tool,get_project_resource_utilization
+    employee_name;",,Tool,get_project_resource_utilization,"Returns per-member allocated hours against logged hours for one project. Params: project_name, period. The allocated side is a current total (allocation dates unpopulated); the logged side is period-scoped, so treat the comparison as indicative."
 Who is below :threshold_percent utilization in :period?,Show underutilized resources.,List users below the utilization threshold.,"threshold_percent, period","SELECT
     u.user_id,
     CONCAT(u.first_name,' ',u.last_name) AS user_name,
@@ -659,7 +659,7 @@ INNER JOIN tbl_master_skills ms
     ON us.skill_id = ms.id
 WHERE
     ms.name = 'Java'
-    AND us.status = '1';",,Tool,get_underutilized_users
+    AND us.status = '1';",,Tool,get_underutilized_users,"Intended to list users below a utilisation threshold. DO NOT EXECUTE AS PUBLISHED - the SQL returns users filtered by skill name (Java), not utilisation; treat as needing SQL. Params: threshold_percent, period. The working counterpart is get_overutilized_users."
 Who is above :threshold_percent utilization in :period?,Show highly utilized resources.,List users over the utilization threshold.,"threshold_percent, period","SELECT
     u.user_id,
     CONCAT(u.first_name, ' ', u.last_name) AS employee_name,
@@ -681,7 +681,7 @@ GROUP BY
     u.user_id,
     employee_name
 ORDER BY
-    logged_hours DESC",,Tool,get_overutilized_users
+    logged_hours DESC",,Tool,get_overutilized_users,"Returns users with allocated hours against logged hours so those above a utilisation threshold can be identified. Params: threshold_percent, period. The threshold is applied by the caller; allocated hours are a current total, logged hours are period-scoped."
 Who has allocations exceeding available capacity?,Show overallocated users.,List resource capacity conflicts.,period,"-- Resolved 2026-08-27: allocation_from/allocation_to not populated -- reports CURRENT allocation, not period-scoped.
 SELECT u.user_id, CONCAT(u.first_name, ' ', u.last_name) AS employee_name,
     SUM(pu.allocation_hrs) AS total_allocated_hours,
@@ -690,7 +690,7 @@ FROM tbl_project_users pu
 INNER JOIN tbl_users u ON pu.user_id = u.user_id
 WHERE pu.status = 1 AND pu.request_status = 'A'
 GROUP BY u.user_id, employee_name
-ORDER BY total_allocated_hours DESC;",,Tool,get_overallocated_users
+ORDER BY total_allocated_hours DESC;",,Tool,get_overallocated_users,"Lists users whose total allocated hours exceed available capacity, with project count. Params: period (not honoured - current allocation only). When the caller supplies an explicit weekly capacity and tolerance use get_resources_over_capacity_threshold."
 How much idle capacity is available in :period?,Show unused resource capacity.,What capacity remains unallocated?,"period, population_scope","-- Resolved 2026-08-27: allocation_from/allocation_to not populated -- reports CURRENT allocation, not period-scoped. :period effectively unused.
 SELECT u.user_id, CONCAT(u.first_name, ' ', u.last_name) AS employee_name,
     COUNT(DISTINCT pu.project_id) AS total_projects,
@@ -703,7 +703,7 @@ LEFT JOIN tbl_project_users pu
 WHERE u.enabled = 1 AND u.verified = 1 AND u.is_block = 0
   AND (:population_scope = 'ALL' OR u.company_id = :population_scope)
 GROUP BY u.user_id, employee_name
-ORDER BY total_allocated_hours ASC;",,Tool,get_idle_capacity
+ORDER BY total_allocated_hours ASC;",,Tool,get_idle_capacity,"Returns unused resource capacity per user - project count and allocated hours against assumed capacity. Params: period (not applied; current snapshot), population_scope. No weekly-capacity field is stored, so the caller must supply the capacity assumption."
 Show utilization by project role for :period.,Compare resource utilization across roles.,What is utilization by role?,period,"-- Resolved 2026-08-27: allocation_from/allocation_to not populated -- reports CURRENT allocation, not period-scoped. :period effectively unused.
 SELECT pu.role_id,
     COUNT(DISTINCT pu.user_id) AS total_users,
@@ -712,7 +712,7 @@ SELECT pu.role_id,
 FROM tbl_project_users pu
 WHERE pu.status = 1 AND pu.request_status = 'A'
 GROUP BY pu.role_id
-ORDER BY total_allocated_hours DESC;",,Tool,get_utilization_by_role
+ORDER BY total_allocated_hours DESC;",,Tool,get_utilization_by_role,"Returns utilisation aggregates grouped by project role - user count, project count, allocated hours. Params: period (not applied; current allocation snapshot). role_id resolves through tbl_roles if names are needed."
 Show utilization for department :department_name in :period.,How utilized is :department_name?,Give department utilization.,"department_name, period","-- Resolved 2026-08-27: (1) department membership via tbl_group_projects + tbl_groups, not tbl_projects.department_id;
 -- (2) allocation_from/allocation_to are not populated in this PMS instance -- reports CURRENT allocation, not a date-scoped period. :period is effectively unused.
 SELECT g.name AS department_name,
@@ -726,7 +726,7 @@ WHERE pu.status = 1 AND pu.request_status = 'A'
   AND g.name = :department_name
   AND gp.project_id <> 0
 GROUP BY g.name
-ORDER BY total_allocated_hours DESC;",,Tool,get_department_utilization
+ORDER BY total_allocated_hours DESC;",,Tool,get_department_utilization,"Returns utilisation for the users on one department's projects. Department membership resolves via tbl_group_projects + tbl_groups, not tbl_projects.department_id. Params: department_name, period (not applied - current allocation snapshot)."
 What is forecast utilization for :future_period?,Show expected resource utilization next month.,Forecast allocation-based utilization.,future_period,"-- Resolved 2026-08-27: allocation_from is not populated -- forecasting future allocation is not possible from this data.
 SELECT u.user_id, CONCAT(u.first_name, ' ', u.last_name) AS employee_name,
     COUNT(DISTINCT pu.project_id) AS total_future_projects,
@@ -737,9 +737,9 @@ WHERE pu.status = 1 AND pu.request_status = 'A'
   AND pu.allocation_from <= '2026-09-30'
   AND pu.allocation_to >= '2026-09-01'
 GROUP BY u.user_id, employee_name
-ORDER BY forecast_allocated_hours DESC;",,Blocked - Data Not Available,
-What is the estimate for :project_name?,Show the project estimate value.,How much effort is estimated for :project_name?,project_name,"SELECT p.project_id, p.project_key, p.title, p.estimate AS estimated_hours, p.is_approved FROM tbl_projects p WHERE p.title = :project_name AND p.status = 1 AND p.archive = 0 ORDER BY p.project_id;",,Tool,get_project_estimate
-Show total booked and chargeable hours for :project_name.,What are the booked versus chargeable hours?,Summarize project hour totals.,project_name,"SELECT p.project_id, p.project_key, p.title, p.estimate AS estimated_hours, p.total_hours_booked, p.total_chargable_hours, p.grant_hours, p.combined_hours FROM tbl_projects p WHERE p.title = :project_name AND p.status = 1 AND p.archive = 0 ORDER BY p.project_id;",,Tool,get_project_hours_summary
+ORDER BY forecast_allocated_hours DESC;",,Blocked - Data Not Available,get_forecast_utilization,"Intended to forecast utilisation for a future period. NOT EXECUTABLE - allocation_from is not populated, so future allocation cannot be projected. Params: future_period. Offer the current snapshot (get_idle_capacity, get_overallocated_users) instead."
+What is the estimate for :project_name?,Show the project estimate value.,How much effort is estimated for :project_name?,project_name,"SELECT p.project_id, p.project_key, p.title, p.estimate AS estimated_hours, p.is_approved FROM tbl_projects p WHERE p.title = :project_name AND p.status = 1 AND p.archive = 0 ORDER BY p.project_id;",,Tool,get_project_estimate,Returns the stored effort estimate for one project with its approval flag. Params: project_name. For booked and chargeable totals use get_project_hours_summary.
+Show total booked and chargeable hours for :project_name.,What are the booked versus chargeable hours?,Summarize project hour totals.,project_name,"SELECT p.project_id, p.project_key, p.title, p.estimate AS estimated_hours, p.total_hours_booked, p.total_chargable_hours, p.grant_hours, p.combined_hours FROM tbl_projects p WHERE p.title = :project_name AND p.status = 1 AND p.archive = 0 ORDER BY p.project_id;",,Tool,get_project_hours_summary,"Returns the hour totals recorded on one project - estimate, booked, chargeable, grant and combined. Use for burn questions on a single project. Params: project_name."
 How many grant hours does :project_name have?,Show available grant hours.,What are the granted hours for :project_name?,project_name,"SELECT
     project_id,
     project_unique_id,
@@ -750,9 +750,9 @@ FROM tbl_projects
 WHERE
     status = 1
     AND archive = 0
-    AND title = :project_name;",,Tool,get_project_grant_hours
-What is the deal value of :project_name?,Show the commercial value of :project_name.,What value is recorded for :project_name?,project_name,,,Needs SQL (Tool),get_project_deal_value
-Show infrastructure cost estimates for :project_name.,What monthly infrastructure cost is recorded?,Summarize infrastructure requirement costs.,project_name,"SELECT ir.requirements_id, ir.project_id, ir.tag, ir.provided_by, li.service_category, li.tennancy, li.instance_type, li.region, li.operating_system, li.vcpu, li.memory, li.storage, li.cost, li.monthly_cost, li.version FROM tbl_projects p JOIN project_infrastructure_requirements ir ON ir.project_id = p.project_id JOIN project_requirements_lineitem li ON li.requirements_id = ir.requirements_id WHERE p.title = :project_name ORDER BY ir.requirements_id, li.sl_no;",,Tool,get_project_infrastructure_costs
+    AND title = :project_name;",,Tool,get_project_grant_hours,Returns the grant (funded) hours recorded for one project. Params: project_name. The wider hour picture is get_project_hours_summary.
+What is the deal value of :project_name?,Show the commercial value of :project_name.,What value is recorded for :project_name?,project_name,,,Needs SQL (Tool),get_project_deal_value,"Intended to return the commercial deal value of one project. SQL NOT YET WRITTEN, although tbl_projects.deal_value is already used by portfolio tools such as get_portfolio_rag_distribution. Params: project_name."
+Show infrastructure cost estimates for :project_name.,What monthly infrastructure cost is recorded?,Summarize infrastructure requirement costs.,project_name,"SELECT ir.requirements_id, ir.project_id, ir.tag, ir.provided_by, li.service_category, li.tennancy, li.instance_type, li.region, li.operating_system, li.vcpu, li.memory, li.storage, li.cost, li.monthly_cost, li.version FROM tbl_projects p JOIN project_infrastructure_requirements ir ON ir.project_id = p.project_id JOIN project_requirements_lineitem li ON li.requirements_id = ir.requirements_id WHERE p.title = :project_name ORDER BY ir.requirements_id, li.sl_no;",,Tool,get_project_infrastructure_costs,"Returns infrastructure cost estimate lines for one project - instance, region, spec, unit and monthly cost. Params: project_name. Estimates only; there is no actual-spend data."
 What is the budget status of :project_name?,How much project budget remains?,Is :project_name within budget?,project_name,"SELECT
     project_id,
     title AS project_name,
@@ -764,8 +764,8 @@ FROM tbl_projects
 WHERE
     status = 1
     AND archive = 0
-    AND title = :project_name;",,Tool,get_project_budget_status
-What is the margin of :project_name?,Show revenue minus project cost.,Is :project_name profitable?,project_name,,,Blocked - Data Not Available,
+    AND title = :project_name;",,Tool,get_project_budget_status,"Returns the budget-relevant fields of one project (estimate, grant hours, booked and chargeable hours) from which remaining effort budget can be derived. Params: project_name. No stored remaining-budget figure; margin is unavailable entirely - see get_project_margin."
+What is the margin of :project_name?,Show revenue minus project cost.,Is :project_name profitable?,project_name,,,Blocked - Data Not Available,get_project_margin,Intended to return the margin (revenue minus cost) of one project. NOT EXECUTABLE - no cost or revenue data is captured in this instance. Params: project_name. Offer effort-based budget consumption via get_project_budget_status instead.
 What are the open risks for :project_name?,Show unresolved risks on :project_name.,List active project risks.,project_name,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -789,13 +789,13 @@ WHERE
     AND r.status = 1
 ORDER BY
     r.rating DESC,
-    r.target_closure_date;",,Tool,get_project_open_risks
-Which risks are high priority?,Show critical project risks.,List the highest-priority risks.,project_scope,"SELECT r.risk_id, r.reference_no, r.title, p.title AS project_title, rp.priority_name, r.rating, r.rating_color_code, r.target_closure_date, rs.status_name FROM tbl_risk r JOIN tbl_projects p ON p.project_id = r.project_id LEFT JOIN tbl_risk_priority rp ON rp.risk_priority_id = r.risk_priority_id LEFT JOIN tbl_risk_status rs ON rs.status_id = r.status_id WHERE LOWER(rp.priority_name) = 'high' AND r.status = 1 ORDER BY r.rating DESC, r.target_closure_date;",,Tool,get_high_priority_risks
-Show details of risk :risk_reference.,Give me the risk record for :risk_reference.,Open risk :risk_reference.,risk_reference,"SELECT r.risk_id, r.reference_no, r.title, r.description, r.cause, r.consequence, r.controls, r.action, p.title AS project_title, pr.probability_name, ri.impact_name, rp.priority_name, r.rating, r.rating_color_code, rs.status_name, r.owner_id, r.target_closure_date, r.revised_target_closure_date, r.date_raised, r.update_date FROM tbl_risk r JOIN tbl_projects p ON p.project_id = r.project_id LEFT JOIN tbl_risk_probability pr ON pr.probability_id = r.probability_id LEFT JOIN tbl_risk_impact ri ON ri.impact_id = r.impact_id LEFT JOIN tbl_risk_priority rp ON rp.risk_priority_id = r.risk_priority_id LEFT JOIN tbl_risk_status rs ON rs.status_id = r.status_id WHERE r.reference_no = :risk_reference AND r.status = 1;",,Tool,get_risk_details
-Show risks by probability.,Group active risks by probability rating.,How many risks are in each probability level?,project_scope,"SELECT pr.probability_id, pr.probability_name, pr.probability_value, COUNT(*) AS risk_count FROM tbl_risk r LEFT JOIN tbl_risk_probability pr ON pr.probability_id = r.probability_id WHERE r.status = 1 GROUP BY pr.probability_id, pr.probability_name, pr.probability_value ORDER BY pr.probability_value DESC;",,Tool,get_risks_by_probability
-Show risks by impact.,Group active risks by impact rating.,How many risks are in each impact level?,project_scope,"SELECT ri.impact_id, ri.impact_name, ri.impact_value, COUNT(*) AS risk_count FROM tbl_risk r LEFT JOIN tbl_risk_impact ri ON ri.impact_id = r.impact_id WHERE r.status = 1 GROUP BY ri.impact_id, ri.impact_name, ri.impact_value ORDER BY ri.impact_value DESC;",,Tool,get_risks_by_impact
-Which risks have no owner?,Show unassigned risks.,List risks without responsibility.,project_scope,"SELECT r.risk_id, r.reference_no, r.title, p.title AS project_title, r.owner_id, r.responsibility, r.target_closure_date FROM tbl_risk r JOIN tbl_projects p ON p.project_id = r.project_id WHERE (r.owner_id = 0 OR r.owner_id IS NULL) AND r.status = 1 ORDER BY r.target_closure_date, r.reference_no;",,Tool,get_risks_without_owner
-Which risk actions are due by :date?,Show mitigation work due soon.,List risk actions approaching target closure.,date,,,Blocked - Data Not Available,
+    r.target_closure_date;",,Tool,get_project_open_risks,"Lists the open risks of one project, with rating, owner and target closure date. Params: project_name. Open comes from tbl_risk_status.status_type (1=Open, 2=Closed) - status_type = 3 matches nothing here, and date_closed stores zero-dates."
+Which risks are high priority?,Show critical project risks.,List the highest-priority risks.,project_scope,"SELECT r.risk_id, r.reference_no, r.title, p.title AS project_title, rp.priority_name, r.rating, r.rating_color_code, r.target_closure_date, rs.status_name FROM tbl_risk r JOIN tbl_projects p ON p.project_id = r.project_id LEFT JOIN tbl_risk_priority rp ON rp.risk_priority_id = r.risk_priority_id LEFT JOIN tbl_risk_status rs ON rs.status_id = r.status_id WHERE LOWER(rp.priority_name) = 'high' AND r.status = 1 ORDER BY r.rating DESC, r.target_closure_date;",,Tool,get_high_priority_risks,"Lists risks with a high priority rating. Params: project_scope (optional). Caveat: the app bands rating as >=20 Red, 12-19 Amber, <12 Green; ad-hoc thresholds elsewhere in this sheet do not match and the banding model is an open decision (C-12)."
+Show details of risk :risk_reference.,Give me the risk record for :risk_reference.,Open risk :risk_reference.,risk_reference,"SELECT r.risk_id, r.reference_no, r.title, r.description, r.cause, r.consequence, r.controls, r.action, p.title AS project_title, pr.probability_name, ri.impact_name, rp.priority_name, r.rating, r.rating_color_code, rs.status_name, r.owner_id, r.target_closure_date, r.revised_target_closure_date, r.date_raised, r.update_date FROM tbl_risk r JOIN tbl_projects p ON p.project_id = r.project_id LEFT JOIN tbl_risk_probability pr ON pr.probability_id = r.probability_id LEFT JOIN tbl_risk_impact ri ON ri.impact_id = r.impact_id LEFT JOIN tbl_risk_priority rp ON rp.risk_priority_id = r.risk_priority_id LEFT JOIN tbl_risk_status rs ON rs.status_id = r.status_id WHERE r.reference_no = :risk_reference AND r.status = 1;",,Tool,get_risk_details,"Returns the full record of one risk - cause, consequence, controls, action, probability, impact, rating, status, owner and dates. Params: risk_reference (tbl_risk.reference_no). For how it changed over time use get_risk_history."
+Show risks by probability.,Group active risks by probability rating.,How many risks are in each probability level?,project_scope,"SELECT pr.probability_id, pr.probability_name, pr.probability_value, COUNT(*) AS risk_count FROM tbl_risk r LEFT JOIN tbl_risk_probability pr ON pr.probability_id = r.probability_id WHERE r.status = 1 GROUP BY pr.probability_id, pr.probability_name, pr.probability_value ORDER BY pr.probability_value DESC;",,Tool,get_risk_counts_by_probability,"Returns counts of active risks grouped by probability level. Use for risk distribution by likelihood. Params: project_scope (optional). Counts only, not the risk rows."
+Show risks by impact.,Group active risks by impact rating.,How many risks are in each impact level?,project_scope,"SELECT ri.impact_id, ri.impact_name, ri.impact_value, COUNT(*) AS risk_count FROM tbl_risk r LEFT JOIN tbl_risk_impact ri ON ri.impact_id = r.impact_id WHERE r.status = 1 GROUP BY ri.impact_id, ri.impact_name, ri.impact_value ORDER BY ri.impact_value DESC;",,Tool,get_risk_counts_by_impact,"Returns counts of active risks grouped by impact level. Use for risk distribution by severity of consequence. Params: project_scope (optional). Counts only, not the risk rows."
+Which risks have no owner?,Show unassigned risks.,List risks without responsibility.,project_scope,"SELECT r.risk_id, r.reference_no, r.title, p.title AS project_title, r.owner_id, r.responsibility, r.target_closure_date FROM tbl_risk r JOIN tbl_projects p ON p.project_id = r.project_id WHERE (r.owner_id = 0 OR r.owner_id IS NULL) AND r.status = 1 ORDER BY r.target_closure_date, r.reference_no;",,Tool,get_risks_without_owner,Lists risks with no owner (owner_id 0 or NULL). Use for risk-governance gaps. Params: project_scope (optional). For owner overload rather than absence use get_risk_owner_concentration.
+Which risk actions are due by :date?,Show mitigation work due soon.,List risk actions approaching target closure.,date,,,Blocked - Data Not Available,get_risk_actions_due_by_date,"Intended to list risk mitigation actions due by a date. NOT EXECUTABLE - the risk-action tables are not populated in this instance. Params: date. Closest working alternative: get_overdue_open_risks, which uses dates held on the risk record."
 Which open risks are past their target closure date?,Show overdue unresolved risks.,List risks missing target closure.,as_of_date,"SELECT
     r.risk_id,
     r.reference_no,
@@ -817,8 +817,8 @@ WHERE
     AND COALESCE(r.revised_target_closure_date, r.target_closure_date) < '2026-08-11'
 ORDER BY
     overdue_days DESC,
-    r.rating DESC;",,Tool,get_overdue_open_risks
-Show the recorded history of risk :risk_reference.,How has risk :risk_reference changed over time?,"Show status, probability, and impact history for :risk_reference.",risk_reference,"SELECT r.reference_no, rh.post_date, rs.status_name, rp.probability_name, ri.impact_name, u.username AS changed_by FROM tbl_risk r JOIN tbl_risk_history rh ON rh.risk_id = r.risk_id LEFT JOIN tbl_risk_status rs ON rs.status_id = rh.status_id LEFT JOIN tbl_risk_probability rp ON rp.probability_id = rh.probability_id LEFT JOIN tbl_risk_impact ri ON ri.impact_id = rh.impact_id LEFT JOIN tbl_users u ON u.user_id = rh.user_id WHERE r.reference_no = :risk_reference ORDER BY rh.post_date DESC;",,Tool,get_risk_history
+    r.rating DESC;",,Tool,get_overdue_open_risks,"Lists open risks past their target closure date (revised date preferred), with days overdue. Params: as_of_date. Caveat: the published SQL hardcodes 2026-08-11 as the comparison date - bind :as_of_date before execution."
+Show the recorded history of risk :risk_reference.,How has risk :risk_reference changed over time?,"Show status, probability, and impact history for :risk_reference.",risk_reference,"SELECT r.reference_no, rh.post_date, rs.status_name, rp.probability_name, ri.impact_name, u.username AS changed_by FROM tbl_risk r JOIN tbl_risk_history rh ON rh.risk_id = r.risk_id LEFT JOIN tbl_risk_status rs ON rs.status_id = rh.status_id LEFT JOIN tbl_risk_probability rp ON rp.probability_id = rh.probability_id LEFT JOIN tbl_risk_impact ri ON ri.impact_id = rh.impact_id LEFT JOIN tbl_users u ON u.user_id = rh.user_id WHERE r.reference_no = :risk_reference ORDER BY rh.post_date DESC;",,Tool,get_risk_history,"Returns the recorded change history of one risk from tbl_risk_history - status, probability, impact and who changed it. Params: risk_reference. For current state only use get_risk_details."
 Show risk creation and closure trend for the last :months months.,How are open risks trending?,Give monthly risk movement.,months,"SELECT
     DATE_FORMAT(months.month_start, '%Y-%m') AS month,
     COALESCE(created.risks_created, 0) AS risks_created,
@@ -858,7 +858,7 @@ LEFT JOIN
 ) closed
 ON months.month_start = closed.month_start
 
-ORDER BY months.month_start;",,Tool,get_risk_trend
+ORDER BY months.month_start;",,Tool,get_risk_trend,"Returns monthly counts of risks created and closed over the last N months. Use for whether risk exposure is trending up or down. Params: months. Closure is derived from status, not date_closed, which stores zero-dates."
 What are the open issues for :project_name?,Show unresolved issues on :project_name.,List active project issues.,project_name,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -885,9 +885,9 @@ WHERE
 ORDER BY
     i.priority DESC,
     i.severity DESC,
-    i.planned_closure_date;",,Tool,get_project_open_issues
-Show details of issue :issue_reference.,Give me the issue record for :issue_reference.,Open issue :issue_reference.,issue_reference,"SELECT i.issue_id, i.reference_no, i.title, i.description, p.title AS project_title, i.user_id AS raised_by_user_id, i.date_raised, i.date_closed, i.issue_status_id, s.status_name, i.severity, i.priority, i.impact, i.planned_closure_date, i.overdue_status, i.update_date FROM tbl_project_issues i JOIN tbl_projects p ON p.project_id = i.project_id LEFT JOIN tbl_project_issue_status s ON s.issue_status_id = i.issue_status_id WHERE i.reference_no = :issue_reference AND i.status = 1;",,Tool,get_issue_details
-Which issues have high severity?,Show critical defects or issues.,List high-severity open issues.,project_scope,,,Hold - Pending Clarification,get_high_severity_issues
+    i.planned_closure_date;",,Tool,get_project_open_issues,"Lists the open issues of one project, with severity, priority and planned closure date. Params: project_name. Open is status_type != 3 on tbl_project_issue_status, which is safe on this table (developer-confirmed, C-03)."
+Show details of issue :issue_reference.,Give me the issue record for :issue_reference.,Open issue :issue_reference.,issue_reference,"SELECT i.issue_id, i.reference_no, i.title, i.description, p.title AS project_title, i.user_id AS raised_by_user_id, i.date_raised, i.date_closed, i.issue_status_id, s.status_name, i.severity, i.priority, i.impact, i.planned_closure_date, i.overdue_status, i.update_date FROM tbl_project_issues i JOIN tbl_projects p ON p.project_id = i.project_id LEFT JOIN tbl_project_issue_status s ON s.issue_status_id = i.issue_status_id WHERE i.reference_no = :issue_reference AND i.status = 1;",,Tool,get_issue_details,"Returns the full record of one issue - description, severity, priority, impact, status and dates. Params: issue_reference (reference_no). date_closed can hold a zero-date, so judge open/closed by status, not that column."
+Which issues have high severity?,Show critical defects or issues.,List high-severity open issues.,project_scope,,,Hold - Pending Clarification,get_high_severity_issues,"Intended to list high-severity issues. PENDING CLARIFICATION - the severity scale and which values count as high are not agreed, and no SQL is published. Params: project_scope. Ask for the definition; get_project_open_issues returns severity per issue meanwhile."
 Which open issues are overdue?,Show issues past planned closure date.,List delayed unresolved issues.,as_of_date,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -913,9 +913,9 @@ WHERE
 ORDER BY
     overdue_days DESC,
     i.priority DESC,
-    i.severity DESC;",,Tool,get_overdue_open_issues
-Show issue counts by status for :project_name.,Summarize issues by workflow status.,How many issues are in each status?,project_name,"SELECT s.issue_status_id, s.status_name, s.status_type, COUNT(*) AS issue_count FROM tbl_project_issues i JOIN tbl_projects p ON p.project_id = i.project_id LEFT JOIN tbl_project_issue_status s ON s.issue_status_id = i.issue_status_id WHERE p.title = :project_name AND i.status = 1 GROUP BY s.issue_status_id, s.status_name, s.status_type ORDER BY s.status_order, s.status_name;",,Tool,get_project_issue_status_counts
-Show issues assigned to :employee_name.,List :employee_name’s project issues.,What issues is :employee_name responsible for?,employee_name,,,Needs SQL (Tool),get_employee_issues
+    i.severity DESC;",,Tool,get_overdue_open_issues,"Lists open issues past their planned closure date, with days overdue. Params: as_of_date. Caveat: the published SQL hardcodes 2026-08-11 as the comparison date - bind :as_of_date before execution."
+Show issue counts by status for :project_name.,Summarize issues by workflow status.,How many issues are in each status?,project_name,"SELECT s.issue_status_id, s.status_name, s.status_type, COUNT(*) AS issue_count FROM tbl_project_issues i JOIN tbl_projects p ON p.project_id = i.project_id LEFT JOIN tbl_project_issue_status s ON s.issue_status_id = i.issue_status_id WHERE p.title = :project_name AND i.status = 1 GROUP BY s.issue_status_id, s.status_name, s.status_type ORDER BY s.status_order, s.status_name;",,Tool,get_project_issue_status_counts,"Returns issue counts for one project grouped by workflow status, including status_type so open and closed can be derived. Params: project_name. Counts only - the row list is get_project_open_issues."
+Show issues assigned to :employee_name.,List :employee_name’s project issues.,What issues is :employee_name responsible for?,employee_name,,,Needs SQL (Tool),get_employee_issues,"Intended to list issues assigned to a named employee. SQL NOT YET WRITTEN - tbl_project_issues records a raising user, not a confirmed assignee, so the ownership path needs a decision. Params: employee_name."
 Generate a live weekly task summary for :project_name.,Summarise task activity for :project_name between :week_start and :week_end.,Show this week’s task KPIs for :project_name.,project_identifier; week_start; week_end,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -950,7 +950,7 @@ LEFT JOIN (
     WHERE ts.timesheet_date BETWEEN :week_start AND :week_end
     GROUP BY t.project_id
 ) ts_stats ON ts_stats.project_id = p.project_id
-WHERE p.status = 1 AND p.archive = 0 AND p.title = :project_name;",,Tool,get_project_weekly_task_summary
+WHERE p.status = 1 AND p.archive = 0 AND p.title = :project_name;",,Tool,get_project_weekly_task_summary,"Returns a live weekly task KPI summary for one project - total, open, completed, high-priority and overdue counts with the week's effort. Params: project_identifier, week_start, week_end. Dimensions are pre-aggregated in subqueries; open counts status_type IN (1,2,4,6)."
 Generate a live weekly issue summary for :project_name.,Summarise issue activity for :project_name between :week_start and :week_end.,Show this week’s issue KPIs for :project_name.,project_identifier; week_start; week_end,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -971,8 +971,8 @@ WHERE
         OR i.update_date BETWEEN :week_start AND :week_end
         OR i.date_closed BETWEEN :week_start AND :week_end
     )
-GROUP BY p.project_id, p.title;",,Tool,get_project_weekly_issue_summary
-Show the latest executive summary for :project_name.,Give the latest project management summary.,What is the latest executive update for :project_name?,project_name,"SELECT es.executive_id, es.project_id, p.title AS project_title, es.summary, es.stage, es.client_mood, es.live_issues, es.dev_issues, es.resource, es.dev, es.test, es.issues, es.risks, es.pm, es.remaining_tail, es.post_date, es.save_date FROM tbl_project_executive_summary es JOIN tbl_projects p ON p.project_id = es.project_id WHERE p.title = :project_name ORDER BY es.save_date DESC, es.post_date DESC LIMIT 1;",,Tool,get_project_latest_executive_summary
+GROUP BY p.project_id, p.title;",,Tool,get_project_weekly_issue_summary,"Returns a live weekly issue KPI summary for one project - total issues plus issues raised and closed in the week. Params: project_identifier, week_start, week_end. Pair with get_project_weekly_task_summary for the full weekly report."
+Show the latest executive summary for :project_name.,Give the latest project management summary.,What is the latest executive update for :project_name?,project_name,"SELECT es.executive_id, es.project_id, p.title AS project_title, es.summary, es.stage, es.client_mood, es.live_issues, es.dev_issues, es.resource, es.dev, es.test, es.issues, es.risks, es.pm, es.remaining_tail, es.post_date, es.save_date FROM tbl_project_executive_summary es JOIN tbl_projects p ON p.project_id = es.project_id WHERE p.title = :project_name ORDER BY es.save_date DESC, es.post_date DESC LIMIT 1;",,Tool,get_project_latest_executive_summary,"Returns the most recent executive summary for one project - narrative, stage, client mood and the dev, test, issue, risk and resource commentary. Params: project_name. To find projects lacking a recent update use get_stale_executive_summary_projects."
 Give me a portfolio health summary.,"Summarize projects, tasks, risks, and issues.",Show the overall PMS health dashboard.,"current_user_scope, as_of_date","SELECT
     (SELECT COUNT(*) FROM tbl_projects WHERE status = 1 AND archive = 0) AS total_projects,
     task_stats.total_tasks,
@@ -1012,8 +1012,8 @@ FROM (
     FROM tbl_timesheets ts
     INNER JOIN tbl_project_tasks t ON t.task_id = ts.task_id
     INNER JOIN tbl_projects p ON p.project_id = t.project_id AND p.status = 1 AND p.archive = 0
-) ts_stats;",,Tool,get_portfolio_health_summary
-"Which projects require immediate executive attention, ranked from highest to lowest risk?",Show the top :top_n projects needing leadership intervention.,Create an executive exception list for the portfolio.,as_of_date; top_n; scoring_weights,,,NL2SQL Candidate,
+) ts_stats;",,Tool,get_portfolio_health_summary,"Returns a portfolio-wide health dashboard - active project count with pre-aggregated task, issue and risk counts. Params: current_user_scope, as_of_date. Dimensions are aggregated in subqueries (flat joins would multiply rows). Composition by status is get_active_project_summary."
+"Which projects require immediate executive attention, ranked from highest to lowest risk?",Show the top :top_n projects needing leadership intervention.,Create an executive exception list for the portfolio.,as_of_date; top_n; scoring_weights,,,NL2SQL Candidate,get_executive_attention_projects,"Intended to rank projects needing immediate executive attention. NO FIXED SQL - NL2SQL candidate: the ranking depends on caller-supplied scoring weights across RAG, overdue work, risk and issue signals. Params: as_of_date, top_n, scoring_weights."
 "What percentage of the active portfolio is Red, Amber, or Green when weighted by deal value?",Show deal-value-weighted RAG distribution.,How much portfolio value sits in each RAG category?,as_of_date,"SELECT
     p.rag,
     COUNT(*) AS total_projects,
@@ -1036,7 +1036,7 @@ WHERE
 GROUP BY
     p.rag
 ORDER BY
-    total_deal_value DESC;",,Tool,get_portfolio_rag_distribution
+    total_deal_value DESC;",,Tool,get_portfolio_rag_distribution,"Returns the active portfolio's RAG distribution weighted by deal value - count, value and percentage of portfolio value per band. Params: as_of_date. Value-weighted, so it will not match a plain project-count split."
 How much deal value is currently at risk in Red and Amber projects?,Show total commercial exposure in unhealthy projects.,What is the value of the portfolio requiring recovery action?,as_of_date; risk_rag_values,"SELECT
     CONCAT(u.first_name, ' ', u.last_name) AS project_manager,
     c.client_name,
@@ -1071,8 +1071,8 @@ GROUP BY
     ps.stage_name
 
 ORDER BY
-    deal_value_at_risk DESC;",,Hold - Pending Clarification,get_deal_value_at_risk
-Which projects are most likely to miss their committed end dates?,Forecast projects at risk of schedule slippage.,Which projects need intervention to protect their delivery date?,as_of_date; forecast_horizon; scoring_weights,,,NL2SQL Candidate,
+    deal_value_at_risk DESC;",,Hold - Pending Clarification,get_deal_value_at_risk,"Intended to total the deal value sitting in unhealthy (Red/Amber) projects by PM, client, type and stage. PENDING CLARIFICATION - which RAG values count as at risk is not agreed and the SQL does not yet filter on RAG, so it totals everything. Params: as_of_date, risk_rag_values."
+Which projects are most likely to miss their committed end dates?,Forecast projects at risk of schedule slippage.,Which projects need intervention to protect their delivery date?,as_of_date; forecast_horizon; scoring_weights,,,NL2SQL Candidate,get_schedule_slippage_forecast,"Intended to forecast which projects will miss their committed end dates. NO FIXED SQL - NL2SQL candidate; no schedule-baseline history exists to compute slippage deterministically. Params: as_of_date, forecast_horizon, scoring_weights. Available today: get_overdue_projects."
 Which project managers carry the highest concentration of Red or Amber projects?,Rank PMs by unhealthy project count and value.,Which PM portfolios need additional leadership support?,as_of_date; rag_values,"SELECT
     u.user_id,
     CONCAT(u.first_name,' ',u.last_name) AS project_manager,
@@ -1138,8 +1138,8 @@ GROUP BY
 
 ORDER BY
     unhealthy_projects DESC,
-    total_deal_value DESC;",,Tool,get_pm_unhealthy_project_concentration
-"How are project managers performing across delivery, effort, risk, and issue KPIs?",Show a comparative PM delivery scorecard.,Which PMs consistently deliver healthy projects?,period; scoring_weights; minimum_project_count,,,NL2SQL Candidate,
+    total_deal_value DESC;",,Tool,get_pm_unhealthy_project_concentration,"Ranks project managers by their concentration of Red or Amber projects, with deal value, overdue tasks and open issues per PM. Use for which PMs need support. Params: as_of_date, rag_values."
+"How are project managers performing across delivery, effort, risk, and issue KPIs?",Show a comparative PM delivery scorecard.,Which PMs consistently deliver healthy projects?,period; scoring_weights; minimum_project_count,,,NL2SQL Candidate,get_pm_delivery_scorecard,"Intended to score project managers across delivery, effort, risk and issue KPIs. NO FIXED SQL - NL2SQL candidate: KPI weighting and the minimum project count for fairness are caller decisions. Params: period, scoring_weights, minimum_project_count."
 Which projects are consuming effort faster than they are completing work?,Compare effort burn against delivery completion across the portfolio.,Where is effort consumption outpacing progress?,as_of_date; burn_threshold; completion_method,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -1182,7 +1182,7 @@ GROUP BY
     p.estimate,
     p.total_hours_booked
 
-ORDER BY burn_percentage DESC;",,Tool,get_high_burn_low_completion_projects
+ORDER BY burn_percentage DESC;",,Tool,get_high_burn_low_completion_projects,"Lists projects whose effort burn outpaces delivery progress, with burn percentage against average completion. Params: as_of_date, burn_threshold, completion_method. Completion is the unweighted average of task percent_complete - a proxy, not earned value."
 Which projects have consumed more than :burn_percent of estimated effort but completed less than :completion_percent of work?,"Find high-burn, low-progress projects.",Which projects show the strongest effort-to-progress mismatch?,burn_percent; completion_percent; as_of_date,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -1222,8 +1222,8 @@ HAVING
 
 ORDER BY
     burn_percentage DESC,
-    completion_percentage ASC;",,Tool,get_projects_over_burn_threshold
-Which clients have the greatest delivery exposure across active projects?,"Rank clients by project value, unhealthy RAG, overdue work, risks, and issues.",Where is client relationship risk concentrated?,as_of_date; top_n,,,NL2SQL Candidate,
+    completion_percentage ASC;",,Tool,get_projects_over_burn_threshold,"Lists projects that burned more than a given percentage of estimated effort while completing less than a given percentage of work. Use when the caller supplies explicit thresholds; get_high_burn_low_completion_projects is the unparameterised view. Params: burn_percent, completion_percent, as_of_date."
+Which clients have the greatest delivery exposure across active projects?,"Rank clients by project value, unhealthy RAG, overdue work, risks, and issues.",Where is client relationship risk concentrated?,as_of_date; top_n,,,NL2SQL Candidate,get_client_delivery_exposure,"Intended to rank clients by delivery exposure across active projects. NO FIXED SQL - NL2SQL candidate, and it depends on the unverified client_id int-to-varchar join. Params: as_of_date, top_n. Report both blockers rather than approximating by project type."
 "Which project types, business models, sources, or categories have the highest delay and overrun rates?",Compare delivery performance across portfolio segments.,Which types of work are structurally underperforming?,period; segment_dimension; minimum_project_count,"SELECT
     p.project_type,
 
@@ -1272,7 +1272,7 @@ HAVING
 
 ORDER BY
     overdue_projects DESC,
-    avg_effort_variance DESC;",,Tool,get_delay_rates_by_segment
+    avg_effort_variance DESC;",,Tool,get_delay_rates_by_segment,"Compares delivery performance across portfolio segments - project count, overdue projects, average effort overrun. Params: period, segment_dimension, minimum_project_count. The published SQL groups by project_type; other dimensions need the GROUP BY swapped."
 Which high-value projects have unresolved governance or audit gaps?,Show projects with pending/review audit status and high deal value.,Where are governance gaps creating material exposure?,deal_value_threshold; as_of_date,"SELECT
     project_id,
     title AS project_name,
@@ -1307,7 +1307,7 @@ WHERE
 
 ORDER BY
     deal_value DESC,
-    rag DESC;",,Tool,get_governance_gap_projects
+    rag DESC;",,Tool,get_governance_gap_projects,"Lists high-value active projects with unresolved governance or audit gaps, with audit status and the delivery phase flags. Use for governance exposure on the biggest projects. Params: deal_value_threshold, as_of_date."
 Which active projects have stale or missing executive summaries?,Show projects without a recent management update.,Which projects have not provided an executive summary within :days days?,days; as_of_date,"SELECT
     p.project_id,
     p.title,
@@ -1345,8 +1345,8 @@ HAVING
 
 ORDER BY
     days_since_update DESC,
-    p.deal_value DESC;",,Tool,get_stale_executive_summary_projects
-Where does reported client mood conflict with objective project health indicators?,Find projects showing positive client mood but deteriorating delivery KPIs.,Which projects have a narrative-versus-data mismatch?,period; mismatch_rules,,,NL2SQL Candidate,
+    p.deal_value DESC;",,Tool,get_stale_executive_summary_projects,"Lists active projects whose latest executive summary is missing or older than N days, with days since update. Use for which projects have not reported. Params: days, as_of_date. To read the summary itself use get_project_latest_executive_summary."
+Where does reported client mood conflict with objective project health indicators?,Find projects showing positive client mood but deteriorating delivery KPIs.,Which projects have a narrative-versus-data mismatch?,period; mismatch_rules,,,NL2SQL Candidate,get_client_mood_vs_health_mismatch,"Intended to find projects where reported client mood contradicts objective delivery health. NO FIXED SQL - NL2SQL candidate: the mismatch rules are caller-defined. Params: period, mismatch_rules. Client mood per project comes from get_project_latest_executive_summary."
 "What is the quarterly trend of projects started, due, completed, and overdue?",Show portfolio inflow and delivery outcomes by quarter.,Is the organisation taking on work faster than it completes it?,start_date; end_date; completion_status_types,"SELECT
 
 YEAR(start_date) AS project_year,
@@ -1393,7 +1393,7 @@ QUARTER(start_date)
 
 ORDER BY
 project_year,
-project_quarter;",,Tool,get_quarterly_project_trend
+project_quarter;",,Tool,get_quarterly_project_trend,"Returns quarterly counts of projects started, due, completed and overdue. Use for intake-versus-delivery trend questions. Params: start_date, end_date, completion_status_types."
 Which projects have remained in the same delivery stage for too long?,Show stage aging across active projects.,Which projects appear stuck in their current stage?,as_of_date; stage_age_thresholds,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -1417,7 +1417,7 @@ WHERE
 
 ORDER BY
     stage_age_days DESC,
-    p.deal_value DESC;",,Tool,get_stage_aging_projects
+    p.deal_value DESC;",,Tool,get_stage_aging_projects,"Lists active projects sitting in the same delivery stage too long, with stage age in days. Params: as_of_date, stage_age_thresholds. Caveat: stage age derives from tbl_projects.update_date, which changes on any edit - a proxy, not a true stage-entry timestamp."
 "Which active projects show no recent task, issue, risk, timesheet, or summary activity?",Find active projects that appear dormant.,Which projects have had no operational activity in the last :days days?,days; as_of_date,"SELECT
     p.project_id,
     p.title,
@@ -1475,7 +1475,7 @@ latest_activity
 )>=:days
 
 ORDER BY
-latest_activity;",,Tool,get_dormant_projects
+latest_activity;",,Tool,get_dormant_projects,"Lists active projects with no task, issue, risk, timesheet or executive-summary activity in the last N days, with the most recent activity date across all five. Use for projects that look abandoned. Params: days, as_of_date."
 Which projects have open tasks due after the project end date?,Show project schedules that are internally inconsistent.,Which committed project dates are earlier than their remaining task deadlines?,as_of_date,"SELECT
 
 p.project_id,
@@ -1530,8 +1530,8 @@ p.end_date
 
 ORDER BY
 
-latest_due_date DESC;",,Tool,get_projects_with_late_tasks
-Which incomplete tasks are blocking the largest number of dependent tasks?,Rank overdue bottleneck tasks by downstream dependency count.,What tasks create the greatest delivery bottleneck?,project_identifier; as_of_date; top_n,,,Needs SQL (Tool),get_blocking_tasks
+latest_due_date DESC;",,Tool,get_projects_with_late_tasks,"Lists projects with open tasks due after the project's own end date, with the latest task due date. Use for internally inconsistent schedules and commitment-date credibility. Params: as_of_date."
+Which incomplete tasks are blocking the largest number of dependent tasks?,Rank overdue bottleneck tasks by downstream dependency count.,What tasks create the greatest delivery bottleneck?,project_identifier; as_of_date; top_n,,,Needs SQL (Tool),get_blocking_tasks,"Intended to rank incomplete tasks by how many dependent tasks they block. SQL NOT YET WRITTEN - no dependency data beyond the parent_id hierarchy is confirmed populated. Params: project_identifier, as_of_date, top_n. Closest available: get_task_subtasks."
 Which projects contain the highest concentration of open High-priority or Red-RAG tasks?,Rank projects by critical task backlog.,Where is urgent delivery work concentrated?,as_of_date; top_n,"SELECT
 
 p.project_id,
@@ -1618,7 +1618,7 @@ critical_backlog_ratio DESC,
 
 critical_tasks DESC
 
-LIMIT :top_n;",,Tool,get_critical_task_backlog_projects
+LIMIT :top_n;",,Tool,get_critical_task_backlog_projects,"Ranks projects by their concentration of open High-priority or Red-RAG tasks, with the critical ratio. Use for where urgent work is concentrated. Params: as_of_date, top_n. The task-level lists are get_high_priority_open_tasks and get_red_rag_tasks."
 Which tasks are due within :days days but remain below :completion_percent complete?,Show near-term tasks at risk of missing due dates.,What upcoming work needs immediate action?,days; completion_percent; as_of_date; optional_project,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -1654,7 +1654,7 @@ ORDER BY
     t.rag DESC,
     t.percent_complete ASC,
     t.estimate_complete DESC,
-    t.due_date;",,Tool,get_at_risk_tasks
+    t.due_date;",,Tool,get_at_risk_tasks,"Lists tasks due within N days that are still below a completion percentage, with days remaining. Use for near-term slippage prevention. Params: days, completion_percent, as_of_date, optional_project."
 Which projects and tasks have the largest estimate-to-actual effort variance?,Rank task overruns across the portfolio.,Where are estimates least accurate?,period; top_n; actual_effort_source,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -1728,7 +1728,7 @@ t.estimate
 ORDER BY
 variance_hours DESC
 
-LIMIT 20;",,Hold - Pending Clarification,get_effort_variance_ranking
+LIMIT 20;",,Hold - Pending Clarification,get_effort_variance_ranking,"Intended to rank projects and tasks by estimate-to-actual effort variance. PENDING CLARIFICATION - whether actual effort comes from task actual_hours or timesheet sums is undecided, and the two disagree (see get_project_timesheet_vs_actual). Params: period, top_n, actual_effort_source."
 "Which tasks show high completion percentages but little or no recent time logged, or heavy time logged with low completion?",Find task progress and effort inconsistencies.,Where does reported completion conflict with timesheet evidence?,period; completion_thresholds; hours_thresholds,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -1800,8 +1800,8 @@ HAVING mismatch_type <> 'Consistent'
 ORDER BY
 
 logged_hours DESC,
-t.percent_complete DESC;",,Tool,get_completion_effort_mismatch_tasks
-Which projects have a Green project RAG but a significant Red-task backlog?,Find mismatches between project health and task-level health.,Where may project RAG be understating delivery risk?,red_task_ratio_threshold; as_of_date,,,Needs SQL (Tool),get_green_rag_red_task_backlog_projects
+t.percent_complete DESC;",,Tool,get_completion_effort_mismatch_tasks,"Lists tasks whose reported completion conflicts with logged effort - high completion with little time booked, or heavy time booked with low completion. Use for progress-credibility checks. Params: period, completion_thresholds, hours_thresholds."
+Which projects have a Green project RAG but a significant Red-task backlog?,Find mismatches between project health and task-level health.,Where may project RAG be understating delivery risk?,red_task_ratio_threshold; as_of_date,,,Needs SQL (Tool),get_green_rag_red_task_backlog_projects,"Intended to list projects reporting a Green RAG while carrying a significant Red-task backlog. SQL NOT YET WRITTEN. Params: red_task_ratio_threshold, as_of_date. Composable today from get_project_rag plus get_critical_task_backlog_projects."
 Which projects have the highest percentage of open tasks without active assignees?,Rank projects by unassigned work.,Where is delivery work not owned?,as_of_date; minimum_open_tasks,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -1859,7 +1859,7 @@ HAVING
 
 ORDER BY
     unassigned_task_ratio DESC,
-    unassigned_tasks DESC;",,Tool,get_unassigned_task_ratio_projects
+    unassigned_tasks DESC;",,Tool,get_unassigned_task_ratio_projects,"Ranks projects by the percentage of open tasks with no active assignee, with PM. Use for where delivery work is unowned. Params: as_of_date, minimum_open_tasks. The task-level list is get_unassigned_tasks."
 Which active projects have the lowest acceptance-criteria coverage on open tasks?,Show projects with incomplete task acceptance criteria.,Where is scope validation weak?,as_of_date; minimum_task_count,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -1930,7 +1930,7 @@ ORDER BY
 
 acceptance_criteria_coverage ASC,
 p.deal_value DESC,
-p.rag DESC;",,Tool,get_low_acceptance_criteria_coverage_projects
+p.rag DESC;",,Tool,get_low_acceptance_criteria_coverage_projects,"Ranks active projects by acceptance-criteria coverage on open tasks. Use for where scope validation is weak. Params: as_of_date, minimum_task_count."
 Is the issue backlog increasing or decreasing by project over the last :months months?,Show issue creation versus closure trend.,Which projects are accumulating issues faster than they close them?,months; time_bucket,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -1950,7 +1950,7 @@ WHERE
     AND p.archive = 0
     AND i.date_raised >= DATE_SUB(:as_of_date, INTERVAL 6 MONTH)
 GROUP BY p.project_id, p.title, DATE_FORMAT(i.date_raised, '%Y-%m')
-ORDER BY period, project_name;",,Tool,get_issue_backlog_trend
+ORDER BY period, project_name;",,Tool,get_issue_backlog_trend,"Returns per-project monthly issue creation against closure over the last N months, showing whether the backlog is growing. Params: months, time_bucket. Closure uses status_type, not date_closed, which stores zero-dates."
 Which projects have the oldest unresolved issues and the slowest closure performance?,Rank projects by issue aging and time to close.,Where is issue resolution performance weakest?,as_of_date; period; minimum_issue_count,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -1974,7 +1974,7 @@ WHERE
     )
 GROUP BY p.project_id, p.title
 HAVING COUNT(i.issue_id) >= 5
-ORDER BY avg_open_issue_age DESC, avg_closure_days DESC;",,Tool,get_slowest_issue_closure_projects
+ORDER BY avg_open_issue_age DESC, avg_closure_days DESC;",,Tool,get_slowest_issue_closure_projects,"Ranks projects by issue aging and closure performance, with average age of unresolved issues. Use for where issue resolution is slowest. Params: as_of_date, period, minimum_issue_count."
 Which projects have the highest defect leakage from earlier origination phases into later detection phases?,Show defect leakage by project and phase.,Where are defects being found later than they should be?,period; phase_order_rule; minimum_issue_count,"SELECT
 
     p.project_id,
@@ -2043,8 +2043,8 @@ COUNT(i.issue_id) >= 5
 ORDER BY
 
 leakage_rate DESC,
-high_severity_defects DESC;",,Hold - Pending Clarification,get_defect_leakage_projects
-Which overdue issues create the greatest commercial exposure?,Rank projects by overdue issue severity and deal value.,How much deal value is affected by overdue unresolved issues?,as_of_date; severity_weights; top_n,,,NL2SQL Candidate,
+high_severity_defects DESC;",,Hold - Pending Clarification,get_defect_leakage_projects,"Intended to rank projects by defect leakage from earlier origination into later detection phases. PENDING CLARIFICATION - the SQL compares the two phase columns numerically, assuming a phase ordering that is not agreed. Params: period, phase_order_rule, minimum_issue_count."
+Which overdue issues create the greatest commercial exposure?,Rank projects by overdue issue severity and deal value.,How much deal value is affected by overdue unresolved issues?,as_of_date; severity_weights; top_n,,,NL2SQL Candidate,get_overdue_issue_commercial_exposure,"Intended to rank overdue issues by the commercial exposure they create. NO FIXED SQL - NL2SQL candidate: severity weighting against deal value is caller-defined and the severity scale is still open (see get_high_severity_issues). Params: as_of_date, severity_weights, top_n."
 "Which overdue or closed high-severity issues are missing RCA, correction, or corrective-action details?",Show issue governance records that are incomplete.,Which major defects lack documented root-cause and prevention actions?,severity_threshold; as_of_date,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -2083,8 +2083,8 @@ WHERE
         OR i.correction IS NULL OR TRIM(i.correction) = ''
         OR i.corrective_action IS NULL OR TRIM(i.corrective_action) = ''
     )
-ORDER BY i.severity DESC, i.planned_closure_date, p.title;",,Hold - Pending Clarification,get_incomplete_governance_issues
-Which projects have the highest current risk exposure?,Rank projects by probability-impact exposure.,Where is portfolio risk concentrated today?,as_of_date; exposure_formula; top_n,,,Needs SQL (Tool),get_highest_risk_exposure_projects
+ORDER BY i.severity DESC, i.planned_closure_date, p.title;",,Hold - Pending Clarification,get_incomplete_governance_issues,"Intended to list overdue or closed high-severity issues missing RCA, correction or corrective-action detail. PENDING CLARIFICATION - the severity threshold defining high is not agreed. Params: severity_threshold, as_of_date. Confirm before running the published SQL."
+Which projects have the highest current risk exposure?,Rank projects by probability-impact exposure.,Where is portfolio risk concentrated today?,as_of_date; exposure_formula; top_n,,,Needs SQL (Tool),get_highest_risk_exposure_projects,"Intended to rank projects by current risk exposure. SQL NOT YET WRITTEN - the exposure formula (probability x impact, summed rating, or the app's >=20 / 12-19 / <12 banding) is an open decision (C-12). Params: as_of_date, exposure_formula, top_n. Ask which formula to use."
 "Which risks remain high after mitigation, and which risks have not improved?",Compare original and residual risk scores.,Where has mitigation failed to reduce exposure?,as_of_date; residual_threshold,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -2143,8 +2143,8 @@ AND
 ORDER BY
 
 r.after_mitigation_risk_score DESC,
-r.rating DESC;",,Hold - Pending Clarification,get_high_residual_risk
-Which overdue open risks threaten the greatest project value?,Rank overdue risks by exposure and deal value.,How much commercial value is linked to overdue risk actions?,as_of_date; top_n,,,Needs SQL (Tool),get_overdue_risks_by_project_value
+r.rating DESC;",,Hold - Pending Clarification,get_high_residual_risk,"Intended to list risks still high after mitigation and those whose score has not improved, comparing rating with after_mitigation_risk_score. PENDING CLARIFICATION - the residual threshold and the not-improved rule are not agreed. Params: as_of_date, residual_threshold."
+Which overdue open risks threaten the greatest project value?,Rank overdue risks by exposure and deal value.,How much commercial value is linked to overdue risk actions?,as_of_date; top_n,,,Needs SQL (Tool),get_overdue_risks_by_project_value,"Intended to rank overdue open risks by the deal value of the projects they threaten. SQL NOT YET WRITTEN, and it depends on the unresolved risk-exposure formula (C-12). Params: as_of_date, top_n. Available today: get_overdue_open_risks, without value weighting."
 Which risk owners carry the largest concentration of high-exposure or overdue risks?,Rank risk owners by unresolved exposure.,Who needs support or escalation for risk closure?,as_of_date; top_n,"SELECT
     u.user_id,
     CONCAT(u.first_name, ' ', u.last_name) AS risk_owner,
@@ -2164,7 +2164,7 @@ WHERE
     AND p.archive = 0
 GROUP BY u.user_id, risk_owner
 ORDER BY total_risk_exposure DESC, overdue_risks DESC, avg_open_age DESC
-LIMIT 10;",,Tool,get_risk_owner_concentration
+LIMIT 10;",,Tool,get_risk_owner_concentration,"Ranks risk owners by their load of open, high-exposure or overdue risks, using summed rating as exposure. Use for escalation routing. Params: as_of_date, top_n. Open is status_type != 2 (1=Open, 2=Closed). For risks with no owner use get_risks_without_owner."
 "Which high-exposure risks lack a mitigation plan, contingency plan, responsibility, or target closure date?",Show incomplete risk treatment records.,Which major risks are not actionable because key fields are missing?,exposure_threshold; as_of_date,"SELECT
 
     p.project_id,
@@ -2241,9 +2241,9 @@ ORDER BY
 
 r.rating DESC,
 p.deal_value DESC,
-r.target_closure_date;",,Hold - Pending Clarification,get_incomplete_risk_treatment
-Are risk closure rates and risk aging improving or deteriorating?,"Show monthly risk creation, closure, and aging trends.",Which projects are accumulating long-lived risks?,months; time_bucket,,,NL2SQL Candidate,
-Which projects have both high risk exposure and severe unresolved issues?,Show projects with compounded risk and issue pressure.,Where are risk and defect indicators reinforcing each other?,as_of_date; scoring_weights; top_n,,,NL2SQL Candidate,
+r.target_closure_date;",,Hold - Pending Clarification,get_incomplete_risk_treatment,"Intended to list high-exposure risks missing a mitigation plan, contingency plan, responsibility or target closure date. PENDING CLARIFICATION - the exposure threshold defining high depends on the unresolved rating banding decision (C-12). Params: exposure_threshold, as_of_date."
+Are risk closure rates and risk aging improving or deteriorating?,"Show monthly risk creation, closure, and aging trends.",Which projects are accumulating long-lived risks?,months; time_bucket,,,NL2SQL Candidate,get_risk_closure_trend,"Intended to report whether risk closure rates and risk aging are improving. NO FIXED SQL - NL2SQL candidate: bucketing and the aging definition are caller-defined. Params: months, time_bucket. The fixed tool covering part of this is get_risk_trend."
+Which projects have both high risk exposure and severe unresolved issues?,Show projects with compounded risk and issue pressure.,Where are risk and defect indicators reinforcing each other?,as_of_date; scoring_weights; top_n,,,NL2SQL Candidate,get_compound_risk_issue_projects,"Intended to identify projects carrying both high risk exposure and severe unresolved issues. NO FIXED SQL - NL2SQL candidate: needs caller weights and depends on the unresolved risk-exposure formula and issue-severity scale. Params: as_of_date, scoring_weights, top_n."
 Which resources are overallocated across overlapping active projects?,Show users whose concurrent allocation hours exceed capacity.,Where do project allocations create resource conflicts?,period; weekly_capacity_hours; threshold_percent,"-- Written 2026-08-27: no stored weekly-capacity field exists (O-09/O-10) -- caller supplies the threshold. Reports CURRENT allocation (allocation_from/allocation_to not populated).
 SELECT u.user_id, CONCAT(u.first_name, ' ', u.last_name) AS employee_name,
     SUM(pu.allocation_hrs) AS total_allocated_hours,
@@ -2253,7 +2253,7 @@ INNER JOIN tbl_users u ON pu.user_id = u.user_id
 WHERE pu.status = 1 AND pu.request_status = 'A'
 GROUP BY u.user_id, employee_name
 HAVING SUM(pu.allocation_hrs) > :weekly_capacity_hours
-ORDER BY total_allocated_hours DESC;",,Tool,get_overallocated_resources
+ORDER BY total_allocated_hours DESC;",,Tool,get_resources_over_capacity_threshold,"Lists users whose current total allocated hours exceed a caller-supplied weekly capacity by more than a threshold. Params: period (not honoured), weekly_capacity_hours, threshold_percent. No capacity field is stored (O-09/O-10); allocation dates are unpopulated, so overlapping means currently active."
 Which resources have the largest mismatch between allocated hours and actual logged effort?,Compare allocation against timesheet consumption.,Who is materially over- or under-consuming their allocation?,period; variance_threshold,"-- Written 2026-08-27: allocation side is CURRENT total (allocation_from/allocation_to not populated); timesheet side is genuinely period-scoped via timesheet_date.
 SELECT u.user_id, CONCAT(u.first_name, ' ', u.last_name) AS employee_name,
     SUM(pu.allocation_hrs) AS total_allocated_hours,
@@ -2265,8 +2265,8 @@ LEFT JOIN tbl_timesheets ts ON ts.user_id = u.user_id AND ts.timesheet_date BETW
 WHERE u.enabled = 1 AND u.verified = 1 AND u.is_block = 0
 GROUP BY u.user_id, employee_name
 HAVING ABS(ROUND(SUM(IFNULL(ts.hours,0) + (IFNULL(ts.minutes,0)/60)) - SUM(pu.allocation_hrs), 2)) >= :variance_threshold
-ORDER BY ABS(variance_hours) DESC;",,Tool,get_allocation_vs_logged_mismatch
-Which projects depend excessively on a single contributor?,Show projects where one user contributes more than :threshold_percent of logged effort.,Where is key-person delivery risk highest?,period; threshold_percent; minimum_hours,,,Needs SQL (Tool),get_single_contributor_dependency_projects
+ORDER BY ABS(variance_hours) DESC;",,Tool,get_allocation_vs_logged_mismatch,"Compares each user's allocated hours against hours actually logged and returns the variance. Use for whether allocation matches reality. Params: period, variance_threshold. The allocation side is a current total (dates unpopulated); the timesheet side is genuinely period-scoped."
+Which projects depend excessively on a single contributor?,Show projects where one user contributes more than :threshold_percent of logged effort.,Where is key-person delivery risk highest?,period; threshold_percent; minimum_hours,,,Needs SQL (Tool),get_single_contributor_dependency_projects,"Intended to find projects where one contributor accounts for more than a threshold share of logged effort - key-person risk. SQL NOT YET WRITTEN. Params: period, threshold_percent, minimum_hours. Composable today from get_project_hours_by_user per project."
 Which users are spread across too many concurrent projects?,Rank resources by number of overlapping active project allocations.,Who may be losing productivity through excessive context switching?,period; project_count_threshold,"-- Written 2026-08-27: ""concurrent"" cannot be date-verified (allocation_from/allocation_to not populated) -- counts CURRENT distinct active project allocations.
 SELECT u.user_id, CONCAT(u.first_name, ' ', u.last_name) AS employee_name,
     COUNT(DISTINCT pu.project_id) AS active_project_count
@@ -2275,7 +2275,7 @@ INNER JOIN tbl_users u ON pu.user_id = u.user_id
 WHERE pu.status = 1 AND pu.request_status = 'A'
 GROUP BY u.user_id, employee_name
 HAVING COUNT(DISTINCT pu.project_id) > :project_count_threshold
-ORDER BY active_project_count DESC;",,Tool,get_overextended_users
+ORDER BY active_project_count DESC;",,Tool,get_users_over_project_count_threshold,"Lists users allocated to more than a threshold number of active projects - a context-switching load check. Params: period (not honoured), project_count_threshold. Counts current distinct active allocations, since concurrency cannot be date-verified. See get_users_with_concurrent_allocations."
 Which resource allocations end before their assigned open tasks or project delivery dates?,Show allocation end-date risks.,Where could resources roll off before remaining work is due?,as_of_date; horizon_days,"-- Resolved 2026-08-27: allocation_to is not populated -- comparing it to task/project dates is not possible from this data.
 SELECT u.user_id, CONCAT(u.first_name,' ',u.last_name) AS employee_name,
     p.project_id, p.title AS project_name,
@@ -2293,7 +2293,7 @@ WHERE pu.status = 1 AND pu.request_status = 'A'
   AND pu.allocation_to IS NOT NULL
   AND pu.allocation_to <= DATE_ADD('2026-08-11', INTERVAL 30 DAY)
   AND (pt.due_date > pu.allocation_to OR p.end_date > pu.allocation_to)
-ORDER BY pu.allocation_to, pt.due_date;",,Blocked - Data Not Available,
+ORDER BY pu.allocation_to, pt.due_date;",,Blocked - Data Not Available,get_allocations_ending_before_work,"Intended to flag allocations ending before their assigned open tasks or the project delivery date. NOT EXECUTABLE - allocation_to is not populated, so no comparison against task or project dates is possible. Params: as_of_date, horizon_days."
 "What percentage of logged effort is chargeable by project, PM, client, and project type?",Show chargeable versus non-chargeable effort mix.,Where is non-chargeable delivery effort concentrated?,period; grouping_dimension,"SELECT
     p.project_id,
     p.title AS project_name,
@@ -2345,5 +2345,5 @@ GROUP BY
     p.title
 
 ORDER BY
-    chargeable_effort_ratio DESC;",,Tool,get_chargeable_effort_ratio
-"What projects, risks, tasks, issues, and allocation expiries need executive attention in the next 30, 60, and 90 days?",Create a 30/60/90-day delivery watchlist.,What upcoming events could materially affect the portfolio?,as_of_date; scoring_weights; horizons,,,NL2SQL Candidate,
+    chargeable_effort_ratio DESC;",,Tool,get_chargeable_effort_ratio,"Returns the chargeable share of logged effort - chargeable hours, total hours and the ratio - grouped by project, optionally by PM, client or type. Params: period, grouping_dimension. Chargeability comes from tbl_project_tasks.chargeable = 'Y'."
+"What projects, risks, tasks, issues, and allocation expiries need executive attention in the next 30, 60, and 90 days?",Create a 30/60/90-day delivery watchlist.,What upcoming events could materially affect the portfolio?,as_of_date; scoring_weights; horizons,,,NL2SQL Candidate,get_executive_watchlist_30_60_90,"Intended to build a 30/60/90-day executive watchlist across projects, risks, tasks, issues and allocation expiries. NO FIXED SQL - NL2SQL candidate with caller-defined weights; the allocation-expiry component is not answerable at all. Params: as_of_date, scoring_weights, horizons."
