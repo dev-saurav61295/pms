@@ -51,7 +51,12 @@
       "Bash(echo \"--- exit: $? ---\")",
       "Bash(sh -c '. /Users/sauravkaushik/Developer/pms/.env && ALLOW_INSERT_OPERATION=false ALLOW_UPDATE_OPERATION=false ALLOW_DELETE_OPERATION=false ALLOW_DDL_OPERATION=false exec /Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/node /Users/sauravkaushik/Developer/pms/.mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/index.js')",
       "Bash(echo \"--- pipeline exit: $? ---\")",
-      "Bash(sh -c 'set -a; . /Users/sauravkaushik/Developer/pms/.env; ALLOW_INSERT_OPERATION=false; ALLOW_UPDATE_OPERATION=false; ALLOW_DELETE_OPERATION=false; ALLOW_DDL_OPERATION=false; set +a; exec /Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/node /Users/sauravkaushik/Developer/pms/.mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/index.js')"
+      "Bash(sh -c 'set -a; . /Users/sauravkaushik/Developer/pms/.env; ALLOW_INSERT_OPERATION=false; ALLOW_UPDATE_OPERATION=false; ALLOW_DELETE_OPERATION=false; ALLOW_DDL_OPERATION=false; set +a; exec /Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/node /Users/sauravkaushik/Developer/pms/.mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/index.js')",
+      "Bash(ls -la /Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/node 2>&1; ls -la .mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/index.js 2>&1)",
+      "Bash(timeout 10 sh -c 'set -a; . /Users/sauravkaushik/Developer/pms/.env; MYSQL_PASS=\"$MYSQL_PASSWORD\"; MYSQL_DB=\"$MYSQL_DATABASE\"; ALLOW_INSERT_OPERATION=false; ALLOW_UPDATE_OPERATION=false; ALLOW_DELETE_OPERATION=false; ALLOW_DDL_OPERATION=false; set +a; exec /Users/sauravkaushik/.nvm/versions/node/v20.12.2/bin/node /Users/sauravkaushik/Developer/pms/.mcp-servers/node_modules/@benborla29/mcp-server-mysql/dist/index.js')",
+      "Bash(pkill -f \"mcp-server-mysql/dist/index.js\")",
+      "Bash(timeout 15 sh -c ' *)",
+      "Bash(mkdir -p /private/tmp/claude-501/-Users-sauravkaushik-Developer-pms/e95450b3-2a1a-48ae-9111-5b4f625cba60/scratchpad)"
     ],
     "additionalDirectories": [
       "/Users/sauravkaushik/Developer/AI/PMS",
