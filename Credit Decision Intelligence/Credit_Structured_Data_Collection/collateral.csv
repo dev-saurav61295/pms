@@ -1,0 +1,9 @@
+borrower_id,collateral_type,market_value_inr_mn,realizable_value_inr_mn,proposed_limit_inr_mn,realizable_coverage_x
+C001,Industrial Property,150,120,90,1.33
+C002,Commercial Property,88,70,55,1.27
+C003,Industrial Property,70,55,40,1.38
+C004,Industrial Property,110,88,80,1.1
+C005,Commercial Property,30,24,30,0.8
+C006,Warehouse Property,48,38,25,1.52
+C007,Industrial Property,95,75,50,1.5
+C008,Commercial Property,125,100,70,1.43

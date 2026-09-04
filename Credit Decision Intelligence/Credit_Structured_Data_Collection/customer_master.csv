@@ -1,0 +1,9 @@
+borrower_id,legal_name,sector,region,operating_years,relationship_years,entity_type
+C001,Apex Auto Components Pvt Ltd,Auto Components,West,11,6,Private Limited
+C002,BluePeak Textiles Pvt Ltd,Textiles,North,8,4,Private Limited
+C003,Crestline Foods Pvt Ltd,Food Processing,South,9,5,Private Limited
+C004,Delta Engineering Pvt Ltd,Industrial Engineering,West,14,8,Private Limited
+C005,EcoBuild Materials Pvt Ltd,Construction Materials,East,10,3,Private Limited
+C006,FreshRoute Logistics Pvt Ltd,Logistics,South,2.4,1.5,Private Limited
+C007,GreenLeaf Packaging Pvt Ltd,Packaging,West,12,7,Private Limited
+C008,Horizon Medical Supplies Pvt Ltd,Medical Distribution,North,7,4,Private Limited

@@ -1,0 +1,9 @@
+borrower_id,commercial_bureau_score,enquiries_6m,active_lenders,total_external_exposure_inr_mn,suit_filed_flag,writeoff_flag
+C001,772,1,2,35,No,No
+C002,735,3,3,62,No,No
+C003,748,2,3,58,No,No
+C004,781,1,2,70,No,No
+C005,684,6,4,85,No,No
+C006,721,4,3,30,No,No
+C007,806,0,1,25,No,No
+C008,790,1,2,55,No,No
