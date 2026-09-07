@@ -1,0 +1,51 @@
+# Tag & Taxonomy Definition
+
+Stable business concepts only. Entity values such as distributor IDs, outlet IDs, salesperson IDs, SKU IDs and month values are attributes, not taxonomy tags.
+
+- **Retail & FMCG** - Industry root
+  - **Sales & Distribution Intelligence** - Solution domain
+    - **Commercial Performance** - Commercial outcomes and target performance
+      - **Primary Sales** - Manufacturer sell-in to distributors
+      - **Secondary Sales** - Distributor sell-through to outlets
+      - **Sales Target** - Target and achievement evidence
+      - **Growth & Trend** - Time-series performance movement
+      - **Product Performance** - SKU and brand performance
+      - **Category Performance** - Category-level performance
+      - **Distributor Performance** - Distributor commercial performance
+    - **Distribution Operations** - Operational drivers
+      - **Inventory** - Distributor stock and inventory health
+        - **Inventory Level** - Opening, receipts and closing stock
+        - **Inventory Ageing** - Aged stock and inventory days
+        - **Slow Moving Stock** - Low-velocity/high-ageing stock
+      - **Stock Availability** - Availability and stock-out evidence
+        - **Stock-out** - Days unavailable and lost-sales estimate
+        - **Availability** - In-stock percentage
+      - **Outlet Execution** - Coverage and productive outlet execution
+        - **Outlet Coverage** - Planned versus visited outlets
+        - **Productive Outlet** - Visited outlets generating business
+        - **Order Productivity** - Orders and productivity
+      - **Sales Force** - Salesperson and territory performance
+        - **Salesperson Performance** - Salesperson commercial productivity
+        - **Strike Rate** - Productive calls versus total calls
+        - **Territory Productivity** - Territory-level productivity
+      - **Trade Promotion** - Promotion rollout and effectiveness
+        - **Promotion Execution** - Execution coverage
+        - **Promotion Effectiveness** - Sales uplift and commercial effect
+        - **Scheme Performance** - Scheme cost and margin economics
+      - **Returns & Loss** - Returns, damage and expiry
+        - **Sales Return** - Trade return evidence
+        - **Damage** - Damaged inventory loss
+        - **Expiry** - Expired inventory loss
+      - **Service & Fulfilment** - Order service performance
+        - **Fill Rate** - Order fulfilment rate
+        - **OTIF** - On-time in-full proxy
+        - **Delivery Performance** - Delivery time and cancellations
+    - **Business Context** - Qualitative business evidence
+      - **Sales Operating Guideline** - Operating rules and interpretation
+      - **Promotion Guideline** - Promotion evaluation guidance
+      - **Distributor Review** - Distributor review notes
+      - **Regional Review** - Regional monthly review
+      - **Field Observation** - Field visit evidence
+      - **Business Review** - Monthly business review
+      - **Distributor Communication** - Distributor communication evidence
+      - **Exception & Escalation** - Exceptions and escalations

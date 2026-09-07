@@ -1,0 +1,24 @@
+# Package Manifest
+
+- `01_Ingestion_Packages/01_FMCG_Commercial_Performance_Ingestion.zip` - 1,154,948 bytes
+- `01_Ingestion_Packages/02_FMCG_Distribution_Execution_Ingestion.zip` - 256,571 bytes
+- `01_Ingestion_Packages/03_FMCG_Sales_Business_Context_Ingestion.zip` - 6,390 bytes
+- `02_Tag_Taxonomy/Dataset_Taxonomy_Mapping.csv` - 1,770 bytes
+- `02_Tag_Taxonomy/Tag_Taxonomy_Definition.md` - 3,086 bytes
+- `02_Tag_Taxonomy/Tag_Taxonomy_Definition.xlsx` - 8,667 bytes
+- `03_Agent_Prompts/01_Commercial_Performance_Collection_System_Prompt.md` - 2,085 bytes
+- `03_Agent_Prompts/02_Distribution_Execution_Collection_System_Prompt.md` - 1,910 bytes
+- `03_Agent_Prompts/03_Sales_Business_Context_Collection_System_Prompt.md` - 1,154 bytes
+- `03_Agent_Prompts/04_Sales_Distribution_Intelligence_Mesh_System_Prompt.md` - 6,286 bytes
+- `04_Setup_and_Testing/Setup_Guide.md` - 3,022 bytes
+- `04_Setup_and_Testing/Test_Question_Bank.xlsx` - 7,717 bytes
+- `04_Setup_and_Testing/Testing_Guide.docx` - 39,598 bytes
+- `05_Ground_Truth_DO_NOT_INGEST/Demo_Expected_Outcomes.md` - 1,680 bytes
+- `05_Ground_Truth_DO_NOT_INGEST/Expected_Analytical_Outcomes.md` - 4,831 bytes
+- `05_Ground_Truth_DO_NOT_INGEST/Ground_Truth_Catalog.xlsx` - 7,298 bytes
+- `05_Ground_Truth_DO_NOT_INGEST/Root_Cause_Calculations.xlsx` - 5,706 bytes
+- `05_Ground_Truth_DO_NOT_INGEST/Test_Question_Mapping.xlsx` - 7,672 bytes
+- `06_Event_Demo/Event_Demo_Script.md` - 3,315 bytes
+- `07_Reference/Synthetic_Data_Model_and_Architecture.xlsx` - 6,962 bytes
+- `07_Reference/Validation_Report.md` - 1,423 bytes
+- `README.md` - 2,266 bytes

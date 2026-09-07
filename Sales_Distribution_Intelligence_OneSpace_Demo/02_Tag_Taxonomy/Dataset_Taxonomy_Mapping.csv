@@ -1,0 +1,29 @@
+file_name,taxonomy_tags
+region_master.csv,Commercial Performance
+branch_master.csv,Commercial Performance
+distributor_master.csv,Distributor Performance
+salesperson_master.csv,Sales Force
+outlet_master.csv,Outlet Execution
+product_master.csv,Product Performance | Category Performance
+primary_sales.csv,Primary Sales | Growth & Trend
+secondary_sales.csv,Secondary Sales | Growth & Trend | Product Performance | Distributor Performance
+salesperson_performance.csv,Salesperson Performance | Strike Rate | Territory Productivity
+sales_targets.csv,Sales Target
+distributor_inventory.csv,Inventory Level | Inventory Ageing | Slow Moving Stock
+stock_availability.csv,Stock-out | Availability
+outlet_coverage.csv,Outlet Coverage | Productive Outlet | Order Productivity
+sales_returns.csv,Sales Return
+damage_expiry.csv,Damage | Expiry
+promotion_execution.csv,Promotion Execution | Promotion Effectiveness | Scheme Performance
+service_fulfilment.csv,Fill Rate | OTIF | Delivery Performance
+Sales_Distribution_Operating_Guidelines.md,Sales Operating Guideline
+Promotion_Execution_Guidelines.md,Promotion Guideline
+East_Region_Monthly_Business_Review_Aug_2026.md,Regional Review | Business Review
+North_Region_Monthly_Business_Review_Aug_2026.md,Regional Review | Business Review
+South_Region_Monthly_Business_Review_Aug_2026.md,Regional Review | Business Review
+West_Region_Monthly_Business_Review_Aug_2026.md,Regional Review | Business Review
+Distributor_Review_Notes_Aug_2026.md,Distributor Review
+Regional_Sales_Manager_Notes_Aug_2026.md,Regional Review
+Field_Visit_Observations_Aug_2026.md,Field Observation
+Distributor_Communication_Summary_Aug_2026.md,Distributor Communication
+Exception_and_Escalation_Notes_Aug_2026.md,Exception & Escalation
