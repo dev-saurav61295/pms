@@ -2,7 +2,14 @@
   "permissions": {
     "allow": [
       "Bash(git branch *)",
-      "Bash(git ls-tree *)"
+      "Bash(git ls-tree *)",
+      "Bash(git -C /Users/sauravkaushik/Developer/pms remote -v)",
+      "Bash(git -C /Users/sauravkaushik/Developer/pms config --get http.postBuffer)",
+      "Bash(git -C /Users/sauravkaushik/Developer/pms config --get http.version)",
+      "Bash(git -C /Users/sauravkaushik/Developer/pms status)",
+      "Bash(git -C /Users/sauravkaushik/Developer/pms log origin/feature/rag-agent..feature/rag-agent --oneline)",
+      "Bash(git --version)",
+      "Bash(git config *)"
     ]
   }
 }
