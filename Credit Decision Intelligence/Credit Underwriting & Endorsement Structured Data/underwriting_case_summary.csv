@@ -1,0 +1,9 @@
+application_id,borrower_id,bre_status,specialist_review_status,review_id,specialist_score,endorsement_status,current_underwriting_stage,next_authority,next_action
+APP001,C001,BRE_PASS,NOT_REQUIRED,,,NOT_REQUIRED,NORMAL_UNDERWRITING,Regional Credit Committee,Proceed with normal underwriting and human sanction review
+APP002,C002,EXCEPTION_REVIEW_REQUIRED,COMPLETED,REV-APP002,66,NOT_ENDORSED,SPECIALIST_REVIEW_COMPLETE,Regional Credit Committee if reconsidered,Obtain stronger evidence before any endorsement
+APP003,C003,REFER_SPECIALIST,COMPLETED,REV-APP003,74,ENDORSED_WITH_CONDITIONS,ENDORSED_PENDING_AUTHORITY,Regional Credit Committee,Send conduct referral and endorsement conditions to committee
+APP004,C004,EXCEPTION_REVIEW_REQUIRED,COMPLETED,REV-APP004,84,ENDORSED_WITH_CONDITIONS,ENDORSED_PENDING_AUTHORITY,Regional Credit Committee,Satisfy collateral condition or approve formal exception
+APP005,C005,HARD_STOP,NOT_ELIGIBLE,,,INELIGIBLE_FOR_ENDORSEMENT,STOPPED,N/A,Remediate severe conduct/credit weaknesses before reconsideration
+APP006,C006,EXCEPTION_REVIEW_REQUIRED,COMPLETED,REV-APP006,81,ENDORSED_POLICY_EXCEPTION,ENDORSED_PENDING_AUTHORITY,Regional Credit Committee,Submit limited-vintage exception with monitoring conditions
+APP007,C007,BRE_PASS,NOT_REQUIRED,,,NOT_REQUIRED,NORMAL_UNDERWRITING,Branch Credit Manager,Proceed with normal underwriting and human sanction review
+APP008,C008,REFER_ENHANCED_REVIEW,COMPLETED,REV-APP008,81,ENDORSED_WITH_CONDITIONS,ENDORSED_PENDING_AUTHORITY,Regional Credit Committee,Obtain diversification contracts and monitor concentration

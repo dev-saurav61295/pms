@@ -1,0 +1,9 @@
+borrower_id,max_dpd_12m,dpd_over_30_events_12m,payment_returns_6m,interest_servicing_delays_12m,current_account_status
+C001,0,0,0,0,Regular
+C002,7,0,1,1,Regular
+C003,45,1,3,1,Regular
+C004,0,0,0,0,Regular
+C005,63,2,4,3,SMA-2
+C006,0,0,0,0,Regular
+C007,0,0,0,0,Regular
+C008,0,0,1,0,Regular

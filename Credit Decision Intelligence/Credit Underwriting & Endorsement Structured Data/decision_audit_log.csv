@@ -1,0 +1,19 @@
+audit_event_id,application_id,borrower_id,event_timestamp,stage,actor_id_or_type,decision_or_event,reason_summary,governing_reference
+AUD-001,APP001,C001,2026-09-08T09:00:00,BRE,SYSTEM,BRE_PASS,All core configured rules passed,Credit Policy - Working Capital v1.0
+AUD-002,APP002,C002,2026-09-08T09:05:00,BRE,SYSTEM,EXCEPTION_REVIEW_REQUIRED,DSCR/current ratio failures; utilisation caution,Credit Policy - Working Capital v1.0
+AUD-003,APP002,C002,2026-09-08T11:15:00,SPECIALIST_REVIEW,SP001,SCORE_66,Enhanced review; insufficient compensating evidence,Specialist Review Scorecard Guide v1.0
+AUD-004,APP002,C002,2026-09-08T11:20:00,ENDORSEMENT,SP001,NOT_ENDORSED,Do not progress as an exception until stronger evidence is available,Endorsement Guidelines v1.0
+AUD-005,APP003,C003,2026-09-08T09:10:00,BRE,SYSTEM,REFER_SPECIALIST,45-day DPD triggers referral,Credit Policy - Working Capital v1.0
+AUD-006,APP003,C003,2026-09-08T12:00:00,SPECIALIST_REVIEW,SP002,SCORE_74,Supportable with conduct conditions,Specialist Review Scorecard Guide v1.0
+AUD-007,APP003,C003,2026-09-08T12:05:00,ENDORSEMENT,SP002,ENDORSED_WITH_CONDITIONS,Cure evidence and monthly monitoring required,Endorsement Guidelines v1.0
+AUD-008,APP004,C004,2026-09-08T09:15:00,BRE,SYSTEM,EXCEPTION_REVIEW_REQUIRED,Collateral coverage 1.10x below 1.25x,Credit Policy - Working Capital v1.0
+AUD-009,APP004,C004,2026-09-08T12:30:00,SPECIALIST_REVIEW,SP001,SCORE_84,Strong profile; remediable collateral exception,Specialist Review Scorecard Guide v1.0
+AUD-010,APP004,C004,2026-09-08T12:35:00,ENDORSEMENT,SP001,ENDORSED_WITH_CONDITIONS,Additional collateral or approved exception required,Endorsement Guidelines v1.0
+AUD-011,APP005,C005,2026-09-08T09:20:00,BRE,SYSTEM,HARD_STOP,Severe combined weakness,Credit Policy - Working Capital v1.0
+AUD-012,APP005,C005,2026-09-08T09:21:00,EXCEPTION_SCREEN,SYSTEM,NOT_ELIGIBLE,Hard-stop combination prevents specialist endorsement,Credit Exception Review Policy v1.0
+AUD-013,APP006,C006,2026-09-08T09:25:00,BRE,SYSTEM,EXCEPTION_REVIEW_REQUIRED,Operating history below 3 years,Credit Policy - Working Capital v1.0
+AUD-014,APP006,C006,2026-09-08T13:00:00,SPECIALIST_REVIEW,SP001,SCORE_81,Supportable limited-vintage exception,Specialist Review Scorecard Guide v1.0
+AUD-015,APP006,C006,2026-09-08T13:05:00,ENDORSEMENT,SP001,ENDORSED_POLICY_EXCEPTION,Enhanced monitoring required,Endorsement Guidelines v1.0
+AUD-016,APP008,C008,2026-09-08T09:35:00,BRE,SYSTEM,REFER_ENHANCED_REVIEW,58% single-customer concentration,Credit Policy - Working Capital v1.0
+AUD-017,APP008,C008,2026-09-08T13:30:00,SPECIALIST_REVIEW,SP003,SCORE_81,Supportable with concentration conditions,Specialist Review Scorecard Guide v1.0
+AUD-018,APP008,C008,2026-09-08T13:35:00,ENDORSEMENT,SP003,ENDORSED_WITH_CONDITIONS,Executed diversification contracts required,Endorsement Guidelines v1.0

@@ -1,0 +1,9 @@
+application_id,borrower_id,bre_run_id,pass_count,caution_count,refer_count,fail_count,hard_stop_count,overall_bre_status,specialist_review_required,exception_or_review_class,routing_path,summary_reason,base_sanction_authority,run_date
+APP001,C001,BRE-APP001-20260908,14,0,0,0,0,BRE_PASS,No,None,Proceed to normal underwriting,All core BRE rules passed.,Regional Credit Committee,2026-09-08
+APP002,C002,BRE-APP002-20260908,11,1,0,2,0,EXCEPTION_REVIEW_REQUIRED,Yes,Financial / Liquidity,Senior Credit Risk Specialist,DSCR and current ratio below policy; utilisation in caution band.,Regional Credit Committee,2026-09-08
+APP003,C003,BRE-APP003-20260908,13,0,1,0,0,REFER_SPECIALIST,Yes,Conduct,Credit Conduct Specialist,45-day DPD triggers Credit Committee referral; otherwise credit profile is supportable.,Branch Credit Manager,2026-09-08
+APP004,C004,BRE-APP004-20260908,13,0,0,1,0,EXCEPTION_REVIEW_REQUIRED,Yes,Collateral,Senior Credit Risk Specialist,Collateral coverage 1.10x is below 1.25x but within policy exception range.,Regional Credit Committee,2026-09-08
+APP005,C005,BRE-APP005-20260908,5,0,3,6,0,HARD_STOP,No,Severe combined weakness,Remediation before reconsideration,"SMA-2, >60 DPD, bureau below 700 and multiple financial/collateral failures.",Branch Credit Manager,2026-09-08
+APP006,C006,BRE-APP006-20260908,13,0,0,1,0,EXCEPTION_REVIEW_REQUIRED,Yes,Operating History,Senior Credit Risk Specialist,Operating history 2.4 years is below 3-year minimum; compensating indicators are otherwise acceptable.,Branch Credit Manager,2026-09-08
+APP007,C007,BRE-APP007-20260908,14,0,0,0,0,BRE_PASS,No,None,Proceed to normal underwriting,All core BRE rules passed.,Branch Credit Manager,2026-09-08
+APP008,C008,BRE-APP008-20260908,13,0,1,0,0,REFER_ENHANCED_REVIEW,Yes,Concentration,Sector Credit Specialist,58% single-customer concentration exceeds 40% enhanced-review trigger.,Regional Credit Committee,2026-09-08

@@ -1,0 +1,9 @@
+application_id,borrower_id,facility_type,current_limit_inr_mn,requested_limit_inr_mn,enhancement_inr_mn,tenor_months,purpose
+APP001,C001,Working Capital Cash Credit,40,90,50,12,Support increased order book and inventory
+APP002,C002,Working Capital Cash Credit,30,55,25,12,Seasonal working capital requirement
+APP003,C003,Working Capital Cash Credit,20,40,20,12,Capacity expansion and inventory
+APP004,C004,Working Capital Cash Credit,45,80,35,12,Support new industrial contracts
+APP005,C005,Working Capital Cash Credit,15,30,15,12,Working capital enhancement
+APP006,C006,Working Capital Cash Credit,10,25,15,12,Fleet and operating expansion
+APP007,C007,Working Capital Cash Credit,25,50,25,12,Capacity and inventory expansion
+APP008,C008,Working Capital Cash Credit,40,70,30,12,Support higher institutional sales

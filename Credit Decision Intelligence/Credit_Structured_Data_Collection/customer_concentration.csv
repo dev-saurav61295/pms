@@ -1,0 +1,9 @@
+borrower_id,largest_customer_revenue_pct,top_3_customers_revenue_pct,largest_supplier_purchase_pct
+C001,22,49,18
+C002,35,68,24
+C003,28,55,20
+C004,25,52,17
+C005,37,72,31
+C006,33,66,28
+C007,18,42,16
+C008,58,78,22

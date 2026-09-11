@@ -1,0 +1,10 @@
+exception_code,related_rule_id,exception_or_referral_type,overrideability,eligibility_conditions,required_specialist_role,max_demo_exposure_inr_mn,exception_approval_authority,required_evidence
+EX-FIN-01,R07,DSCR below policy,Reviewable,DSCR 1.10x-1.24x and no hard-stop conduct flags,Senior Credit Risk Specialist,100,Regional Credit Committee,Specialist score + documented cause + cash-flow mitigation
+EX-LIQ-01,R08,Current ratio below policy,Reviewable,Current ratio 1.00x-1.09x and no hard-stop conduct flags,Senior Credit Risk Specialist,100,Regional Credit Committee,Working-capital cycle explanation + mitigation
+EX-COLL-01,R11,Collateral coverage 1.00x-1.24x,Reviewable,Additional collateral OR approved exception,Senior Credit Risk Specialist,100,Regional Credit Committee,Valuation evidence + collateral enhancement plan
+EX-AGE-01,R01,Operating history 2.00-2.99 years,Reviewable,DSCR >=1.25x; bureau >=700; max DPD <=30; collateral >=1.25x,Senior Credit Risk Specialist,50,Regional Credit Committee,Specialist score + growth evidence + enhanced monitoring
+REF-COND-01,R06,DPD 31-60 days,Referral,Account regular at review; no >60 DPD; cause/cure evidence required,Credit Conduct Specialist,100,Regional Credit Committee,Conduct review + cure evidence + monitoring conditions
+REF-CONC-01,R12,Single-customer concentration >40%,Enhanced Review,"Counterparty quality, contract tenure, alternate pipeline and mitigation must be assessed",Sector Credit Specialist,100,Base sanction authority unless another exception applies,Customer contracts + concentration mitigation plan
+CAUT-UTIL-01,R10,Average utilisation >90% and <=95%,Caution,Not an exception by itself; analyst comment required,Credit Analyst,100,Base sanction authority,Utilisation explanation + working-capital cycle comment
+HARD-01,R03/R04,Suit filed or write-off,Not Overrideable,Any positive suit-filed or write-off flag,N/A,0,N/A,No specialist endorsement permitted
+HARD-02,R05/R14/R02,Severe conduct combination,Not Overrideable,Current SMA-2 plus max DPD >60 plus bureau <700,N/A,0,N/A,Remediation and seasoning required before reconsideration
